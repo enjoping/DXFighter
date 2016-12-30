@@ -21,8 +21,7 @@ class BasicObject {
   protected $handle;
 
   function __construct() {
-    $this->handle = self::$id;
-    self::$id++;
+    $this->handle = self::$id++;
   }
 
   /**
@@ -31,7 +30,15 @@ class BasicObject {
    * @return string
    */
   public function getHandle() {
-    return strtoupper(dechex($this->handle));
+    return $this->idToHex($this->handle);
+  }
+
+  public function idToHex($id) {
+    return strtoupper(dechex($id));
+  }
+
+  public function getUniqueID() {
+    return self::$id++;
   }
 
   public function render() {
