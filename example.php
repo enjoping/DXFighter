@@ -17,4 +17,6 @@ $dxf->addEntity(new \DXFighter\lib\Line(array(0, 0, 0), array(10, 10, 0)));
 $dxf->toString();
 $dxf->addEntity(new \DXFighter\lib\Point(array(5, 0, 0), 2));
 
+$dxf->addEntity(new \DXFighter\lib\Circle(array(5, 0, 0), 3));
+
 $dxf->saveAs('dxfighter.dxf');
