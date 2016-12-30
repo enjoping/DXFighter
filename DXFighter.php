@@ -11,7 +11,9 @@
 namespace DXFighter;
 
 use DXFighter\lib\AppID,
+  DXFighter\lib\Block,
   DXFighter\lib\BlockRecord,
+  DXFighter\lib\Dictionary,
   DXFighter\lib\Layer,
   DXFighter\lib\LType,
   DXFighter\lib\Section,
@@ -65,15 +67,14 @@ class DXFighter {
     $this->header->addItem(new SystemVariable("extmax", array('point' => array(0, 0, 0))));
 
     $tables = array();
-    //$tableOrder = array('appid', 'block_record', 'dimstyle', 'layer', 'ltype', 'style', 'ucs', 'view', 'vport');
     $tableOrder = array('vport', 'ltype', 'layer', 'style', 'view', 'ucs', 'appid', 'dimstyle', 'block_record');
     foreach ($tableOrder as $table) {
       $tables[$table] = new Table($table);
     }
-    $tables['appid']->addEntry(new AppID('DXFighter'));
+    $tables['appid']->addEntry(new AppID('ACAD'));
 
-    $tables['block_record']->addEntry(new BlockRecord('*model_space'));
-    $tables['block_record']->addEntry(new BlockRecord('*paper_space'));
+    $this->addBlock($tables, '*model_space');
+    $this->addBlock($tables, '*paper_space');
 
     $tables['layer']->addEntry(new Layer('0'));
 
@@ -82,6 +83,13 @@ class DXFighter {
 
     $tables['style']->addEntry(new Style('standard'));
     $this->tables->addMultipleItems($tables);
+
+    $this->objects->addItem(new Dictionary(array('ACAD_GROUP')));
+  }
+
+  public function addBlock(&$tables, $name) {
+    $tables['block_record']->addEntry(new BlockRecord($name));
+    $this->blocks->addItem(new Block($name));
   }
 
   /**
