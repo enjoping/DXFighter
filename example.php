@@ -12,8 +12,9 @@ $dxf = new \DXFighter\DXFighter();
 
 //TODO add some example calls
 
-$dxf->addEntity(new \DXFighter\lib\Line(array(0,0,0), array(10,10,0)));
+$dxf->addEntity(new \DXFighter\lib\Line(array(0, 0, 0), array(10, 10, 0)));
 
 $dxf->toString();
+$dxf->addEntity(new \DXFighter\lib\Point(array(5, 0, 0), 2));
 
 $dxf->saveAs('dxfighter.dxf');
