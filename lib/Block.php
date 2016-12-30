@@ -11,7 +11,7 @@
 namespace DXFighter\lib;
 
 /**
- * Class BlockRecord
+ * Class Block
  * @package DXFighter\lib
  */
 class Block extends Entity {
