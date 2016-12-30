@@ -36,6 +36,7 @@ spl_autoload_register (function($class) {
  * @package DXFighter
  */
 class DXFighter {
+  protected $sections;
   protected $header;
   protected $classes;
   protected $tables;
@@ -45,13 +46,10 @@ class DXFighter {
   protected $thumbnailImage;
 
   function __construct() {
-    $this->header = new Section('header');
-    $this->classes = new Section('classes');
-    $this->tables = new Section('tables');
-    $this->blocks = new Section('blocks');
-    $this->entities = new Section('entities');
-    $this->objects = new Section('objects');
-    $this->thumbnailImage = new Section('thumbnailimage');
+    $this->sections = array('header', 'classes', 'tables', 'blocks', 'entities', 'objects', 'thumbnailImage');
+    foreach ($this->sections as $section) {
+      $this->{$section} = new Section($section);
+    }
     $this->addBasicObjects();
   }
 
@@ -67,7 +65,9 @@ class DXFighter {
     $this->header->addItem(new SystemVariable("extmax", array('point' => array(0, 0, 0))));
 
     $tables = array();
-    foreach (array('appid', 'block_record', 'dimstyle', 'layer', 'ltype', 'style', 'ucs', 'view', 'vport') as $table) {
+    //$tableOrder = array('appid', 'block_record', 'dimstyle', 'layer', 'ltype', 'style', 'ucs', 'view', 'vport');
+    $tableOrder = array('vport', 'ltype', 'layer', 'style', 'view', 'ucs', 'appid', 'dimstyle', 'block_record');
+    foreach ($tableOrder as $table) {
       $tables[$table] = new Table($table);
     }
     $tables['appid']->addEntry(new AppID('DXFighter'));
@@ -91,7 +91,7 @@ class DXFighter {
    */
   public function toArray() {
     $output = array();
-    foreach (array('header', 'classes', 'tables', 'blocks', 'entities', 'objects', 'thumbnailImage') as $section) {
+    foreach ($this->sections as $section) {
       $output[strtoupper($section)] = $this->{$section}->toArray();
     }
     return $output;
@@ -106,7 +106,7 @@ class DXFighter {
   public function toString($return = TRUE) {
     $output = array();
     array_push($output, 999, "DXFighter");
-    foreach (array('header', 'classes', 'tables', 'blocks', 'entities', 'objects', 'thumbnailImage') as $section) {
+    foreach ($this->sections as $section) {
       $output[] = $this->{$section}->render();
     }
     array_push($output, 0, "EOF");
