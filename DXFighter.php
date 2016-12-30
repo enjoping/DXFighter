@@ -92,6 +92,10 @@ class DXFighter {
     $this->blocks->addItem(new Block($name));
   }
 
+  public function addEntity($entity) {
+    $this->entities->addItem($entity);
+  }
+
   /**
    * Outputs an array representation of the DXF
    *
