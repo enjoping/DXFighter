@@ -10,19 +10,26 @@
 
 namespace DXFighter;
 
-use DXFighter\lib\Section,
-  DXFighter\lib\SystemVariable,
-  DXFighter\lib\Table,
-  DXFighter\lib\AppID,
+use DXFighter\lib\AppID,
   DXFighter\lib\BlockRecord,
   DXFighter\lib\Layer,
   DXFighter\lib\LType,
-  DXFighter\lib\Style;
+  DXFighter\lib\Section,
+  DXFighter\lib\Style,
+  DXFighter\lib\SystemVariable,
+  DXFighter\lib\Table;
 
-function __autoload($class_name) {
-  $class_name = str_replace('DXFighter\\', '', $class_name);
-  require_once $class_name . '.php';
+function dxf_autoloader($className) {
+  echo $className;
 }
+
+
+spl_autoload_register (function($class) {
+  $class = str_replace('DXFighter\\lib\\', 'lib/', $class);
+  require_once $class . '.php';
+});
+
+
 
 /**
  * Class DXFighter
@@ -120,7 +127,7 @@ class DXFighter {
    */
   public function saveAs($fileName) {
     $fh = fopen($fileName, 'w');
-    fwrite($fh, iconv("UTF-8", "WINDOWS-1252", $this->render(FALSE)));
+    fwrite($fh, iconv("UTF-8", "WINDOWS-1252", $this->toString(FALSE)));
     fclose($fh);
   }
 
