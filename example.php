@@ -19,4 +19,6 @@ $dxf->addEntity(new \DXFighter\lib\Point(array(5, 0, 0), 2));
 
 $dxf->addEntity(new \DXFighter\lib\Circle(array(5, 0, 0), 3));
 
+$dxf->addEntity(new \DXFighter\lib\Ellipse(array(0, 10, 0), array(2, 5, 0), 0.5));
+
 $dxf->saveAs('dxfighter.dxf');
