@@ -21,4 +21,6 @@ $dxf->addEntity(new \DXFighter\lib\Circle(array(5, 0, 0), 3));
 
 $dxf->addEntity(new \DXFighter\lib\Ellipse(array(0, 10, 0), array(2, 5, 0), 0.5));
 
+$dxf->addEntity(new \DXFighter\lib\Arc(array(20, 0, 0), 4, 0, 100));
+
 $dxf->saveAs('dxfighter.dxf');
