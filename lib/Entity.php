@@ -38,19 +38,23 @@ class Entity extends BasicObject{
 	 * @param $center
 	 * @param $angle
 	 */
-  function rotate(&$point, $center, $angle) {
+  protected function rotate(&$point, $center, $angle) {
     $x = $point[0];
     $y = $point[1];
     $point[0] = $center[0] + ($x - $center[0]) * cos($angle) - ($y - $center[1]) * sin($angle);
     $point[1] = $center[1] + ($y - $center[1]) * cos($angle) + ($x - $center[0]) * sin($angle);
   }
 
-	function flagsToString() {
+	protected function flagsToString() {
 		$output = 0;
 		foreach($this->flags as $i => $flag) {
 			$output += pow(2, $i) * $flag;
 		}
 		return $output;
+	}
+
+	public function setLayer($layer) {
+		$this->layer = $layer;
 	}
 }
 
