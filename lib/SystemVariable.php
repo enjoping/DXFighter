@@ -29,11 +29,12 @@ class SystemVariable extends BasicObject {
   public function render() {
     $output = array();
     array_push($output, 9, "$" . strtoupper($this->variable));
-    if(isset($this->values['point'])){
-      array_push($output, $this->point($this->values['point']));
-      unset($this->values['point']);
+    $values = $this->values;
+    if(isset($values['point'])){
+      array_push($output, $this->point($values['point']));
+      unset($values['point']);
     }
-    foreach($this->values as $groupCode => $value){
+    foreach($values as $groupCode => $value){
       array_push($output, $groupCode, $value);
     }
     return implode($output, PHP_EOL);
