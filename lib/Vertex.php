@@ -23,6 +23,7 @@ class Vertex extends Entity {
     $this->point = $point;
     $this->dimension = $dimension;
     $this->pointer = $pointer;
+    $this->layer = $layer;
     $this->flags = array_fill(0, 7, 0);
     parent::__construct();
   }

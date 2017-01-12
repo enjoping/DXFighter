@@ -11,7 +11,7 @@
 namespace DXFighter\lib;
 
 /**
- * Class Polyline
+ * Class Seqend
  * @package DXFighter\lib
  */
 class Seqend extends Entity {
