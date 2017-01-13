@@ -29,12 +29,18 @@ class Polyline extends Entity {
     parent::__construct();
   }
 
-  public function addPoint($point) {
-    $this->points[] = new Vertex($point, $this->dimension, $this->handle, $this->layer);
+  public function addPoint($point, $bulge = 0) {
+    $this->points[] = new Vertex($point, $this->dimension, $this->handle, $this->layer, $bulge);
   }
 
   private function addSeqend() {
     $this->seqend = new Seqend($this->handle, $this->layer);
+  }
+
+  public function rotate($rotate, $rotationCenter = array(0,0,0)) {
+    foreach($this->points as $point) {
+      $point->rotate(deg2rad($rotate), $rotationCenter);
+    }
   }
 
   public function render() {
