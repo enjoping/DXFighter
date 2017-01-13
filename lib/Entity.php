@@ -38,7 +38,7 @@ class Entity extends BasicObject{
 	 * @param $center
 	 * @param $angle
 	 */
-  protected function rotate(&$point, $center, $angle) {
+  protected function rotatePoint(&$point, $center, $angle) {
     $x = $point[0];
     $y = $point[1];
     $point[0] = $center[0] + ($x - $center[0]) * cos($angle) - ($y - $center[1]) * sin($angle);
@@ -51,6 +51,10 @@ class Entity extends BasicObject{
 			$output += pow(2, $i) * $flag;
 		}
 		return $output;
+	}
+
+	public function setFlag($id, $value) {
+		$this->flags[$id] = $value;
 	}
 
 	public function setLayer($layer) {
