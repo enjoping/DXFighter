@@ -29,6 +29,11 @@ class Line extends Entity {
     parent::__construct();
   }
 
+  public function rotate($rotate, $rotationCenter = array(0,0,0)) {
+    $this->rotatePoint($this->start, $rotationCenter, deg2rad($rotate));
+    $this->rotatePoint($this->end, $rotationCenter, deg2rad($rotate));
+  }
+
   public function render() {
     $output = parent::render();
     array_push($output, 100, 'AcDbLine');
