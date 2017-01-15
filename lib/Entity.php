@@ -15,28 +15,23 @@ class Entity extends BasicObject{
 	protected $layer = 0;
 	protected $flags;
 	protected $pointer = 0;
+	protected $color = 256;
+	protected $paperSpace = 0;
+	protected $lineType = 'BYLAYER';
+	protected $lineTypeScale = 1;
+	protected $hidden = 0;
 
 	function __construct(){
 		parent::__construct();
 	}
 
-	function render() {
-		$output = array();
-		array_push($output, 0, strtoupper($this->entityType));
-		array_push($output, 5, $this->getHandle());
-		array_push($output, 330, $this->idToHex($this->pointer));
-		array_push($output, 100, 'AcDbEntity');
-		array_push($output, 8, $this->layer);
-		return $output ;
-	}
-
 	/**
-	 * rotate
-	 * Rotate one point around a center point
+	 * protected rotate function
+	 * Rotate one point around a center point with an angle
 	 *
-	 * @param $point
-	 * @param $center
-	 * @param $angle
+	 * @param $point array
+	 * @param $center array
+	 * @param $angle float
 	 */
   protected function rotatePoint(&$point, $center, $angle) {
     $x = $point[0];
@@ -45,6 +40,11 @@ class Entity extends BasicObject{
     $point[1] = $center[1] + ($y - $center[1]) * cos($angle) + ($x - $center[0]) * sin($angle);
   }
 
+	/**
+	 * protected function for rendering the flags
+	 *
+	 * @return int|number
+	 */
 	protected function flagsToString() {
 		$output = 0;
 		foreach($this->flags as $i => $flag) {
@@ -53,12 +53,81 @@ class Entity extends BasicObject{
 		return $output;
 	}
 
+	/**
+	 * Public function to set flag values for entities
+	 *
+	 * @param $id int
+	 * @param $value 0|1
+	 */
 	public function setFlag($id, $value) {
 		$this->flags[$id] = $value;
 	}
 
+	/**
+	 * Public function to set the layer of an entity
+	 *
+	 * @param $layer string
+	 */
 	public function setLayer($layer) {
 		$this->layer = $layer;
+	}
+
+	/**
+	 * Public function to set the color of an entity
+	 *
+	 * @param $color int autodesc color code 0 = BYBLOCK, 256 = BYLAYER
+	 */
+	public function setColor($color) {
+		$this->color = $color;
+	}
+
+	/**
+	 * Public function to define if a object should belong to paper space
+	 *
+	 * @param $ps 0|1
+	 */
+	public function setPaperSpace($ps) {
+		$this->paperSpace = $ps;
+	}
+
+	/**
+	 * Public function to set the lineType of an entity and an optional scale
+	 *
+	 * @param $lineType
+	 * @param int $scale float
+	 */
+	public function setLineType($lineType, $scale = 1) {
+		$this->lineType = $lineType;
+		$this->lineTypeScale = $scale;
+	}
+
+	/**
+	 * Public function to hide an entity
+	 *
+	 * @param $hidden
+	 */
+	public function hide($hidden) {
+		$this->hidden = $hidden;
+	}
+
+	/**
+	 * Render function to build an basic render array for entities
+	 *
+	 * @return array
+	 */
+	function render() {
+		$output = array();
+		array_push($output, 0, strtoupper($this->entityType));
+		array_push($output, 5, $this->getHandle());
+		array_push($output, 330, $this->idToHex($this->pointer));
+		array_push($output, 100, 'AcDbEntity');
+		array_push($output, 67, $this->paperSpace);
+		array_push($output, 8, $this->layer);
+		array_push($output, 6, $this->lineType);
+		array_push($output, 62, $this->color);
+		array_push($output, 48, $this->lineTypeScale);
+		array_push($output, 60, $this->hidden);
+		return $output ;
 	}
 }
 
