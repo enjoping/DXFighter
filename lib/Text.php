@@ -35,6 +35,14 @@ class Text extends Entity {
     parent::__construct();
   }
 
+  public function setHorizontalJustification($value) {
+    $this->horizontalJustification = $value;
+  }
+
+  public function setVerticalJustification($value) {
+    $this->verticalJustification = $value;
+  }
+
   public function render() {
     $output = parent::render();
     array_push($output, 100, 'AcDbText');
