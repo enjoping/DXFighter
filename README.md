@@ -9,9 +9,13 @@ After adding the first few object types I will start writing a documentation to 
 
 ##Current development status
 I started thinking about how to solve the reading but by now there is not much code for it. I will start with it in 2017 when the writing is ready.
-The writing just started working and I will add all the entities and other objects as fast as possible. At the moment the library supports:
+
+###At the moment the library supports:
  - Arcs
  - Circles
  - Ellipses
  - Lines
+ - LWPolyline
  - Points
+ - Polyline
+ - Text
