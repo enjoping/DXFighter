@@ -1,0 +1,12 @@
+{
+    "name": "enjoping/dxfighter",
+    "authors": [
+        {
+            "name": "Joe Pietler",
+            "email": "enjoping@gmail.com"
+        }
+    ],
+    "require": {
+        "phpcheckstyle/phpcheckstyle": "^0.14.6"
+    }
+}
