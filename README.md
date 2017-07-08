@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/enjoping/DXFighter.svg?branch=master)](https://travis-ci.org/enjoping/DXFighter)
+
 # DXFighter
 ![DXFighter](logo.png) 
 **!Currently in active development!**
