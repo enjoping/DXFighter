@@ -1,6 +1,4 @@
-[![Build Status](https://travis-ci.org/enjoping/DXFighter.svg?branch=master)](https://travis-ci.org/enjoping/DXFighter)
-
-# DXFighter
+# DXFighter [![Build Status](https://travis-ci.org/enjoping/DXFighter.svg?branch=master)](https://travis-ci.org/enjoping/DXFighter)
 ![DXFighter](logo.png) 
 **!Currently in active development!**
 A new DXF writer and reader in PHP which outputs AC1012 (R15) DXF files.
