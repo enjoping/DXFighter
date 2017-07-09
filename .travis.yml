@@ -8,3 +8,5 @@ cache:
     - .composer/cache
 before_script: composer update
 script: php ./vendor/phpcheckstyle/phpcheckstyle/run.php --src ./DXFighter.php --src ./lib --config ./phpcheckstyle.xml
+notifications:
+    slack: laecherbar:y1NWyusbhnKv2tGC3XQCmmJW
