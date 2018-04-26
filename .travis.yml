@@ -6,7 +6,9 @@ php:
 cache:
   directories:
     - .composer/cache
-before_script: composer update
-script: php ./vendor/phpcheckstyle/phpcheckstyle/run.php --src ./DXFighter.php --src ./lib --config ./phpcheckstyle.xml
+before_script: composer install
+script:
+  - php ./vendor/phpcheckstyle/phpcheckstyle/run.php --src ./DXFighter.php --src ./lib --config ./phpcheckstyle.xml
+  - ./vendor/bin/phpunit --bootstrap vendor/autoload.php --testdox tests
 notifications:
     slack: laecherbar:y1NWyusbhnKv2tGC3XQCmmJW
