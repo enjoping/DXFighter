@@ -18,8 +18,16 @@ final class TextTest extends TestCase {
       $text
     );
     $this->assertEquals(
-      md5($text->render()),
-      'd4722c2f09e7673ad7899775d10523e8'
+      $text->render(),
+      "0\nTEXT\n5\n1E\n330\n0\n100\nAcDbEntity\n67\n0\n8\n0\n6\nBYLAYER\n62\n256\n48\n1\n60\n0\n100\nAcDbText\n39\n2\n10\n-10.000\n20\n90.000\n30\n0.000\n40\n50\n1\ntestText\n50\n2\n41\n1\n7\nSTANDARD\n72\n0\n100\nAcDbText\n73\n0"
+    );
+
+    $text->setHorizontalJustification(1);
+    $text->setVerticalJustification(2);
+
+    $this->assertEquals(
+      $text->render(),
+      "0\nTEXT\n5\n1E\n330\n0\n100\nAcDbEntity\n67\n0\n8\n0\n6\nBYLAYER\n62\n256\n48\n1\n60\n0\n100\nAcDbText\n39\n2\n10\n-10.000\n20\n90.000\n30\n0.000\n40\n50\n1\ntestText\n50\n2\n41\n1\n7\nSTANDARD\n72\n1\n100\nAcDbText\n73\n2"
     );
   }
 }
