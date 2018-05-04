@@ -21,16 +21,23 @@ use DXFighter\lib\AppID,
   DXFighter\lib\SystemVariable,
   DXFighter\lib\Table;
 
+/**
+ * Returns the class name, used for auto loading libraries
+ * @param $className
+ */
 function dxf_autoloader($className) {
   echo $className;
 }
 
-
-spl_autoload_register (function($class) {
+/**
+ * Handle class auto loading from lib folder
+ */
+spl_autoload_register(function($class) {
   $class = str_replace('DXFighter\\lib\\', 'lib/', $class);
-  require_once $class . '.php';
+  if (file_exists($class . '.php')) {
+    require_once $class . '.php';
+  }
 });
-
 
 
 /**
@@ -47,6 +54,9 @@ class DXFighter {
   protected $objects;
   protected $thumbnailImage;
 
+  /**
+   * Constructor for the DXFighter class, sets basic values needed for further usage
+   */
   function __construct() {
     $this->sections = array('header', 'classes', 'tables', 'blocks', 'entities', 'objects', 'thumbnailImage');
     foreach ($this->sections as $section) {
@@ -87,11 +97,20 @@ class DXFighter {
     $this->objects->addItem(new Dictionary(array('ACAD_GROUP')));
   }
 
+  /**
+   * Handler for adding block entities to the DXF file
+   * @param $tables
+   * @param $name
+   */
   public function addBlock(&$tables, $name) {
     $tables['block_record']->addEntry(new BlockRecord($name));
     $this->blocks->addItem(new Block($name));
   }
 
+  /**
+   * Handler to add an entity to the DXFighter instance
+   * @param $entity
+   */
   public function addEntity($entity) {
     $this->entities->addItem($entity);
   }
