@@ -24,6 +24,13 @@ class LType extends BasicObject {
   protected $lineType;
   protected $lineElements;
 
+  /**
+   * LType constructor.
+   * @param $name
+   * @param int $flag
+   * @param string $description
+   * @param string $lineType
+   */
   function __construct($name, $flag = 0, $description = '', $lineType = 'CONTINUOUS') {
     $this->name = $name;
     $this->flag = $flag;
@@ -33,10 +40,18 @@ class LType extends BasicObject {
     parent::__construct();
   }
 
-  public function addLineElement($lineElement){
+  /**
+   * @param $lineElement
+   */
+  public function addLineElement($lineElement) {
     $this->lineElements[] = $lineElement;
   }
 
+  /**
+   * Public function to render an entity, returns a string representation of
+   * the entity.
+   * @return string
+   */
   public function render() {
     $absolutLenght = array_map('abs', $this->lineElements);
 

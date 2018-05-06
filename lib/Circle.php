@@ -20,6 +20,13 @@ class Circle extends Entity {
   protected $radius;
   protected $extrusion;
 
+  /**
+   * Circle constructor.
+   * @param $point
+   * @param $radius
+   * @param int $thickness
+   * @param array $extrusion
+   */
   function __construct($point, $radius, $thickness = 0, $extrusion = array(0, 0, 1)) {
     $this->entityType = 'circle';
     $this->point = $point;
@@ -29,6 +36,11 @@ class Circle extends Entity {
     parent::__construct();
   }
 
+  /**
+   * Public function to render an entity, returns a string representation of
+   * the entity.
+   * @return string
+   */
   public function render() {
     $output = parent::render();
     array_push($output, 100, 'AcDbCircle');

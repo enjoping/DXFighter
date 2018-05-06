@@ -20,7 +20,14 @@ class Line extends Entity {
   protected $end;
   protected $extrusion;
 
-  function __construct($start, $end, $thickness = 0, $extrusion = array(0,0,1)) {
+  /**
+   * Line constructor.
+   * @param $start
+   * @param $end
+   * @param int $thickness
+   * @param array $extrusion
+   */
+  function __construct($start, $end, $thickness = 0, $extrusion = array(0, 0, 1)) {
     $this->entityType = 'line';
     $this->start = $start;
     $this->end = $end;
@@ -29,11 +36,21 @@ class Line extends Entity {
     parent::__construct();
   }
 
-  public function rotate($rotate, $rotationCenter = array(0,0,0)) {
+  /**
+   * Rotate the begin and end of the line around the given rotation center
+   * @param $rotate
+   * @param array $rotationCenter
+   */
+  public function rotate($rotate, $rotationCenter = array(0, 0, 0)) {
     $this->rotatePoint($this->start, $rotationCenter, deg2rad($rotate));
     $this->rotatePoint($this->end, $rotationCenter, deg2rad($rotate));
   }
 
+  /**
+   * Public function to render an entity, returns a string representation of
+   * the entity.
+   * @return string
+   */
   public function render() {
     $output = parent::render();
     array_push($output, 100, 'AcDbLine');

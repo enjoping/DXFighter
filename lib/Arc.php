@@ -18,6 +18,15 @@ class Arc extends Circle {
   protected $start;
   protected $end;
 
+  /**
+   * Arc constructor.
+   * @param $point
+   * @param $radius
+   * @param int $start
+   * @param array $end
+   * @param int $thickness
+   * @param array $extrusion
+   */
   function __construct($point, $radius, $start, $end, $thickness = 0, $extrusion = array(0, 0, 1)) {
     parent::__construct($point, $radius, $thickness, $extrusion);
     $this->entityType = 'arc';
@@ -25,6 +34,11 @@ class Arc extends Circle {
     $this->end = $end;
   }
 
+  /**
+   * Public function to render an entity, returns a string representation of
+   * the entity.
+   * @return string
+   */
   public function render() {
     $output = array();
     array_push($output, parent::render());

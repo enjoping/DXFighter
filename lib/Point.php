@@ -20,7 +20,14 @@ class Point extends Entity {
   protected $extrusion;
   protected $angle;
 
-  function __construct($point, $thickness = 0, $extrusion = array(0,0,1), $angle = 0) {
+  /**
+   * Point constructor.
+   * @param $point
+   * @param int $thickness
+   * @param array $extrusion
+   * @param int $angle
+   */
+  function __construct($point, $thickness = 0, $extrusion = array(0, 0, 1), $angle = 0) {
     $this->entityType = 'point';
     $this->point = $point;
     $this->thickness = $thickness;
@@ -29,6 +36,11 @@ class Point extends Entity {
     parent::__construct();
   }
 
+  /**
+   * Public function to render an entity, returns a string representation of
+   * the entity.
+   * @return string
+   */
   public function render() {
     $output = parent::render();
     array_push($output, 100, 'AcDbPoint');

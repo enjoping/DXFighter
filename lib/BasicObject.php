@@ -20,6 +20,9 @@ class BasicObject {
   public static $id = 1;
   protected $handle;
 
+  /**
+   * BasicObject constructor.
+   */
   function __construct() {
     $this->handle = self::$id++;
   }
@@ -33,14 +36,24 @@ class BasicObject {
     return $this->idToHex($this->handle);
   }
 
+  /**
+   * @param $id
+   * @return string
+   */
   public function idToHex($id) {
     return strtoupper(dechex($id));
   }
 
+  /**
+   * @return int
+   */
   public function getUniqueID() {
     return self::$id++;
   }
 
+  /**
+   *
+   */
   public function render() {
 
   }

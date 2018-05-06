@@ -15,18 +15,24 @@ namespace DXFighter\lib;
  * @package DXFighter\lib
  */
 class Seqend extends Entity {
-  protected $base = array(0, 0, 0);
-  protected $thickness;
-  protected $extrusion;
-  protected $points = array();
-  protected $dimension;
 
+  /**
+   * Seqend constructor.
+   * @param $pointer
+   * @param $layer
+   */
   function __construct($pointer, $layer) {
     $this->entityType = 'seqend';
     $this->pointer = $pointer;
+    $this->layer = $layer;
     parent::__construct();
   }
 
+  /**
+   * Public function to render an entity, returns a string representation of
+   * the entity.
+   * @return string
+   */
   public function render() {
     $output = parent::render();
     return implode($output, PHP_EOL);

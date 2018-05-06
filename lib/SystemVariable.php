@@ -20,21 +20,31 @@ class SystemVariable extends BasicObject {
   protected $variable;
   protected $values;
 
+  /**
+   * SystemVariable constructor.
+   * @param $variable
+   * @param $values
+   */
   function __construct($variable, $values) {
     $this->variable = $variable;
     $this->values = $values;
     parent::__construct();
   }
 
+  /**
+   * Public function to render an entity, returns a string representation of
+   * the entity.
+   * @return string
+   */
   public function render() {
     $output = array();
     array_push($output, 9, "$" . strtoupper($this->variable));
     $values = $this->values;
-    if(isset($values['point'])){
+    if (isset($values['point'])) {
       array_push($output, $this->point($values['point']));
       unset($values['point']);
     }
-    foreach($values as $groupCode => $value){
+    foreach ($values as $groupCode => $value) {
       array_push($output, $groupCode, $value);
     }
     return implode($output, PHP_EOL);

@@ -17,9 +17,13 @@ namespace DXFighter\lib;
 class Dictionary extends Entity {
   protected $entries = array();
 
+  /**
+   * Dictionary constructor.
+   * @param array $entries
+   */
   function __construct($entries = array()) {
-    if(!empty($entries)) {
-      foreach($entries as $entry) {
+    if (!empty($entries)) {
+      foreach ($entries as $entry) {
         array_push($this->entries, array(
           'name' => $entry,
           'owner' => new Dictionary()
@@ -29,6 +33,11 @@ class Dictionary extends Entity {
     parent::__construct();
   }
 
+  /**
+   * Public function to render an entity, returns a string representation of
+   * the entity.
+   * @return string
+   */
   public function render() {
     $output = array();
     $entryOutput = '';
@@ -36,7 +45,7 @@ class Dictionary extends Entity {
     array_push($output, 5, $this->getHandle());
     array_push($output, 330, 0);
     array_push($output, 100, 'AcDbDictionary');
-    foreach($this->entries as $entry) {
+    foreach ($this->entries as $entry) {
       array_push($output, 3, $entry['name']);
       array_push($output, 350, $entry['owner']->getHandle());
       $entryOutput .= $entry['owner']->render();
@@ -44,7 +53,7 @@ class Dictionary extends Entity {
     array_push($output, 1001, 'ACAD');
     array_push($output, 1000, 'TREAT_AS_HARD');
     array_push($output, 1070, 0);
-    if(!empty($entryOutput)) {
+    if (!empty($entryOutput)) {
       array_push($output, $entryOutput);
     }
     return implode($output, PHP_EOL);

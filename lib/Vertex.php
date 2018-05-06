@@ -19,6 +19,14 @@ class Vertex extends Entity {
   protected $point;
   protected $bulge;
 
+  /**
+   * Vertex constructor.
+   * @param $point
+   * @param $dimension
+   * @param $pointer
+   * @param $layer
+   * @param $bulge
+   */
   function __construct($point, $dimension, $pointer, $layer, $bulge) {
     $this->entityType = 'vertex';
     $this->point = $point;
@@ -30,14 +38,23 @@ class Vertex extends Entity {
     parent::__construct();
   }
 
+  /**
+   * @param $angle
+   * @param $center
+   */
   public function rotate($angle, $center) {
     $this->rotatePoint($this->point, $center, $angle);
   }
 
+  /**
+   * Public function to render an entity, returns a string representation of
+   * the entity.
+   * @return string
+   */
   public function render() {
     $output = parent::render();
     array_push($output, 100, 'AcDbVertex');
-    array_push($output, 100, $this->dimension == 2 ? 'AcDb2dVertex' : 'AcDb3dPolylineVertex');
+    array_push($output, 100, $this->dimension === 2 ? 'AcDb2dVertex' : 'AcDb3dPolylineVertex');
     array_push($output, $this->point($this->point));
     array_push($output, 42, $this->bulge);
     array_push($output, 70, $this->flagsToString());

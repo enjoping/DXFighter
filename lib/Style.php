@@ -23,6 +23,14 @@ class Style extends BasicObject {
   protected $width;
   protected $lineType;
 
+  /**
+   * Style constructor.
+   * @param $name
+   * @param int $flag
+   * @param int $height
+   * @param int $width
+   * @param string $lineType
+   */
   function __construct($name, $flag = 0, $height = 0, $width = 1, $lineType = 'CONTINUOUS') {
     $this->name = $name;
     $this->flag = $flag;
@@ -32,6 +40,11 @@ class Style extends BasicObject {
     parent::__construct();
   }
 
+  /**
+   * Public function to render an entity, returns a string representation of
+   * the entity.
+   * @return string
+   */
   public function render() {
     $output = array();
     array_push($output, 0, "STYLE");

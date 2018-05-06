@@ -21,6 +21,11 @@ class Section {
   protected $name;
   protected $items = array();
 
+  /**
+   * Section constructor.
+   * @param $name
+   * @param array $items
+   */
   function __construct($name, $items = array()) {
     $this->name = $name;
     $this->items = $items;
@@ -41,21 +46,21 @@ class Section {
    * @param array $items
    */
   public function addMultipleItems($items) {
-    foreach($items as $item) {
+    foreach ($items as $item) {
       $this->addItem($item);
     }
   }
 
   /**
-   * render function to print the section
-   *
+   * Public function to render an entity, returns a string representation of
+   * the entity.
    * @return string
    */
   public function render() {
     $output = array();
     array_push($output, 0, "SECTION");
     array_push($output, 2, strtoupper($this->name));
-    foreach($this->items as $item){
+    foreach ($this->items as $item) {
       array_push($output, $item->render());
     }
     array_push($output, 0, "ENDSEC");

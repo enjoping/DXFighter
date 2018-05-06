@@ -15,12 +15,13 @@ namespace DXFighter\lib;
  * @package DXFighter\lib
  */
 class LWPolyline extends Entity {
-  protected $thickness;
-  protected $extrusion;
   protected $points = array();
   protected $dimension;
-  protected $seqend;
 
+  /**
+   * LWPolyline constructor.
+   * @param int $dimension
+   */
   function __construct($dimension = 2) {
     $this->entityType = 'lwpolyline';
     $this->flags = array_fill(0, 7, 0);
@@ -28,17 +29,26 @@ class LWPolyline extends Entity {
     parent::__construct();
   }
 
+  /**
+   * Add a point to the LWPolyline
+   * @param array $point
+   */
   public function addPoint($point) {
     $this->points[] = $point;
   }
 
+  /**
+   * Public function to render an entity, returns a string representation of
+   * the entity.
+   * @return string
+   */
   public function render() {
     $output = parent::render();
     array_push($output, 100, 'AcDbPolyline');
-    array_push($output, 90, sizeof($this->points));
+    array_push($output, 90, count($this->points));
     array_push($output, 70, $this->flagsToString());
 
-    foreach($this->points as $point) {
+    foreach ($this->points as $point) {
       array_push($output, $this->point($point));
     }
 

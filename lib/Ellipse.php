@@ -22,7 +22,16 @@ class Ellipse extends Entity {
   protected $start;
   protected $end;
 
-  function __construct($center, $endpoint, $ratio, $start = 0, $end = M_PI*2, $extrusion = array(0, 0, 1)) {
+  /**
+   * Ellipse constructor.
+   * @param $center
+   * @param $endpoint
+   * @param $ratio
+   * @param int $start
+   * @param float $end
+   * @param array $extrusion
+   */
+  function __construct($center, $endpoint, $ratio, $start = 0, $end = M_PI * 2, $extrusion = array(0, 0, 1)) {
     $this->entityType = 'ellipse';
     $this->center = $center;
     $this->endpoint = $endpoint;
@@ -33,6 +42,11 @@ class Ellipse extends Entity {
     parent::__construct();
   }
 
+  /**
+   * Public function to render an entity, returns a string representation of
+   * the entity.
+   * @return string
+   */
   public function render() {
     $output = parent::render();
     array_push($output, 100, 'AcDbEllipse');

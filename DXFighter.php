@@ -141,13 +141,13 @@ class DXFighter {
       $output[] = $this->{$section}->render();
     }
     array_push($output, 0, "EOF");
-    $output_string = implode($output, PHP_EOL);
+    $outputString = implode($output, PHP_EOL);
 
     if ($return) {
-      echo nl2br($output_string);
+      echo nl2br($outputString);
       return '';
     } else {
-      return $output_string;
+      return $outputString;
     }
   }
 

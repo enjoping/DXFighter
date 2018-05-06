@@ -25,6 +25,14 @@ class Text extends Entity {
   protected $horizontalJustification = 0;
   protected $verticalJustification = 0;
 
+  /**
+   * Text constructor.
+   * @param $text
+   * @param $point
+   * @param $height
+   * @param int $rotation
+   * @param int $thickness
+   */
   function __construct($text, $point, $height, $rotation = 0, $thickness = 0) {
     $this->entityType = 'text';
     $this->text = $text;
@@ -35,14 +43,25 @@ class Text extends Entity {
     parent::__construct();
   }
 
+  /**
+   * @param $value
+   */
   public function setHorizontalJustification($value) {
     $this->horizontalJustification = $value;
   }
 
+  /**
+   * @param $value
+   */
   public function setVerticalJustification($value) {
     $this->verticalJustification = $value;
   }
 
+  /**
+   * Public function to render an entity, returns a string representation of
+   * the entity.
+   * @return string
+   */
   public function render() {
     $output = parent::render();
     array_push($output, 100, 'AcDbText');

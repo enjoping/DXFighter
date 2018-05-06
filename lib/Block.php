@@ -20,6 +20,10 @@ class Block extends Entity {
   protected $endblk;
   protected $point = array(0, 0, 0);
 
+  /**
+   * Block constructor.
+   * @param $name
+   */
   function __construct($name) {
     $this->entityType = 'block';
     $this->name = $name;
@@ -29,6 +33,11 @@ class Block extends Entity {
     $this->endblk = new Endblk($this->layer, $this->pointer);
   }
 
+  /**
+   * Public function to render an entity, returns a string representation of
+   * the entity.
+   * @return string
+   */
   public function render() {
     $output = parent::render();
     array_push($output, 100, 'AcDbBlockBegin');

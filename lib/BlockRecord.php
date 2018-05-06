@@ -17,11 +17,20 @@ namespace DXFighter\lib;
 class BlockRecord extends BasicObject {
   protected $name;
 
+  /**
+   * BlockRecord constructor.
+   * @param $name
+   */
   function __construct($name) {
     $this->name = $name;
     parent::__construct();
   }
 
+  /**
+   * Public function to render an entity, returns a string representation of
+   * the entity.
+   * @return string
+   */
   public function render() {
     $output = array();
     array_push($output, 0, "BLOCK_RECORD");

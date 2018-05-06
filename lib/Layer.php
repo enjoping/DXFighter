@@ -23,6 +23,13 @@ class Layer extends BasicObject {
   protected $color;
   protected $lineType;
 
+  /**
+   * Layer constructor.
+   * @param $name
+   * @param int $flag
+   * @param int $color
+   * @param string $lineType
+   */
   function __construct($name, $flag = 0, $color = 0, $lineType = 'CONTINUOUS') {
     $this->name = $name;
     $this->flag = $flag;
@@ -31,6 +38,11 @@ class Layer extends BasicObject {
     parent::__construct();
   }
 
+  /**
+   * Public function to render an entity, returns a string representation of
+   * the entity.
+   * @return string
+   */
   public function render() {
     $output = array();
     array_push($output, 0, "LAYER");
