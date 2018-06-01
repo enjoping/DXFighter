@@ -20,6 +20,10 @@ use DXFighter\lib\AppID,
   DXFighter\lib\Style,
   DXFighter\lib\SystemVariable,
   DXFighter\lib\Table;
+use DXFighter\lib\Ellipse;
+use DXFighter\lib\Line;
+use DXFighter\lib\Text;
+use PHPUnit\Framework\Exception;
 
 /**
  * Returns the class name, used for auto loading libraries
@@ -55,14 +59,27 @@ class DXFighter {
   protected $thumbnailImage;
 
   /**
-   * Constructor for the DXFighter class, sets basic values needed for further usage
+   * DXFighter constructor.
+   * sets basic values needed for further usage if the init flag is set
+   *
+   * @param bool $init
    */
-  function __construct() {
-    $this->sections = array('header', 'classes', 'tables', 'blocks', 'entities', 'objects', 'thumbnailImage');
+  function __construct($init = TRUE) {
+    $this->sections = array(
+      'header',
+      'classes',
+      'tables',
+      'blocks',
+      'entities',
+      'objects',
+      'thumbnailImage'
+    );
     foreach ($this->sections as $section) {
       $this->{$section} = new Section($section);
     }
-    $this->addBasicObjects();
+    if ($init) {
+      $this->addBasicObjects();
+    }
   }
 
   /**
@@ -162,4 +179,170 @@ class DXFighter {
     fclose($fh);
   }
 
+  public function read($path) {
+    if (!file_exists($path) || !filesize($path)) {
+      throw new Exception('The path to the file is either invalid or the file is empty');
+    }
+    $content = file_get_contents($path);
+    $lines = preg_split ('/$\R?^/m', $content);
+    $values = [];
+    for ($i = 0; $i < count($lines); $i++) {
+      $values[] = [
+        'key' => $lines[$i++],
+        'value' => $lines[$i]
+      ];
+    }
+    $this->readDocument($values);
+  }
+
+  private function readDocument($values) {
+    $section_pattern = [
+      'name' => '',
+      'values' => [],
+    ];
+    $section = $section_pattern;
+    foreach ($values as $value) {
+      if ($value['key'] == 0) {
+        if ($value['value'] == 'SECTION') {
+          $section = $section_pattern;
+          continue;
+        } elseif ($value['value'] == 'ENDSEC') {
+          switch ($section['name']) {
+            case 'HEADER':
+              $this->readHeaderSection($section['values']);
+              break;
+            case 'TABLES':
+              $this->readTablesSection($section['values']);
+              break;
+            case 'ENTITIES':
+              $this->readEntitiesSection($section['values']);
+              break;
+            default:
+              if (count($section['values'])) {
+                // TODO BLOCKS and OBJECTS section are still missing
+                #echo "Section " . $section['name'] . " with " . count($section['values']) . " elements is currently ignored" . PHP_EOL;
+              }
+              break;
+          }
+          continue;
+        }
+      }
+      if ($value['key'] == 2 && empty($section['name'])) {
+        $section['name'] = $value['value'];
+        continue;
+      }
+      $section['values'][] = $value;
+    }
+  }
+
+  private function readHeaderSection($values) {
+    $variable_pattern = [
+      'name' => '',
+      'values' => [],
+    ];
+    $variables = [];
+    $variable = $variable_pattern;
+    foreach ($values as $value) {
+      if ($value['key'] == 9) {
+        if (!empty($variable['values'])) {
+          $variables[] = $variable;
+        }
+        $variable = $variable_pattern;
+        $variable['name'] = $value['value'];
+        continue;
+      }
+      $variable['values'][$value['key']] = $value['value'];
+    }
+    if (!empty($variable['values'])) {
+      $variables[] = $variable;
+    }
+    foreach($variables as $variable) {
+      $this->header->addItem(new SystemVariable(str_replace('$', '', $variable['name']), $variable['values']));
+    }
+  }
+
+  private function readTablesSection($values) {
+    // TODO: The content of the table needs to be added
+    $table = null;
+    foreach ($values as $value) {
+      if ($value['key'] == 0) {
+        if ($value['value'] == 'TABLE') {
+          $table = null;
+          continue;
+        } elseif ($value['value'] == 'ENDTAB') {
+          $this->tables->addItem($table);
+          continue;
+        }
+      }
+      if ($value['key'] == 2 && !isset($table)) {
+        $table = new Table($value['value']);
+      }
+    }
+  }
+
+  private function readEntitiesSection($values) {
+    $entityType = '';
+    $data = [];
+    $types = ['TEXT', 'LINE', 'ELLIPSE'];
+    // TODO most entity types are still missing
+    foreach ($values as $value) {
+      if ($value['key'] == 0) {
+        if (in_array($entityType, $types) && !empty($data)) {
+          $this->addReadEntity($entityType, $data);
+        }
+        $entityType = $value['value'];
+        $data = [];
+      } else {
+        if (in_array($entityType, $types)) {
+          $data[$value['key']] = $value['value'];
+        }
+      }
+    }
+    if (in_array($entityType, $types) && !empty($data)) {
+      $this->addReadEntity($entityType, $data);
+    }
+  }
+
+  private function addReadEntity($type, $data) {
+    switch ($type) {
+      case 'TEXT':
+        $point = [$data[10], $data[20], $data[30]];
+        $rotation = $data[50] ? $data[50] : 0;
+        $thickness = $data[39] ? $data[39] : 0;
+        $text = new Text($data[1], $point, $data[40], $rotation, $thickness);
+        if ($data[72]) {
+          $text->setHorizontalJustification($data[72]);
+        }
+        if ($data[73]) {
+          $text->setVerticalJustification($data[73]);
+        }
+        $this->addEntity($text);
+        break;
+      case 'LINE':
+        $start = [$data[10], $data[20], $data[30]];
+        $end = [$data[11], $data[21], $data[31]];
+        $thickness = $data[39] ? $data[39] : 0;
+        $extrusion = [
+          $data[210] ? $data[210] : 0,
+          $data[220] ? $data[220] : 0,
+          $data[230] ? $data[230] : 1
+        ];
+        $line = new Line($start, $end, $thickness, $extrusion);
+        $this->addEntity($line);
+        break;
+      case 'ELLIPSE':
+        $center = [$data[10], $data[20], $data[30]];
+        $endpoint = [$data[11], $data[21], $data[31]];
+        $start = $data[41] ? $data[41] : 0;
+        $end = $data[42] ? $data[42] : M_PI * 2;
+        $extrusion = [
+          $data[210] ? $data[210] : 0,
+          $data[220] ? $data[220] : 0,
+          $data[230] ? $data[230] : 1
+        ];
+        $ellipse = new Ellipse($center, $endpoint, $data[40], $start, $end, $extrusion);
+        $this->addEntity($ellipse);
+        break;
+    }
+  }
 }
