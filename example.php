@@ -62,7 +62,7 @@ for($i=0; $i < 2; $i++) {
   $dxf->addEntity($line2);
 
   $ellipse = new \DXFighter\lib\Ellipse(array(0,-50,0),array(0,12,0),0.5);
-#  $ellipse->rotate($rotate);
+  $ellipse->rotate($rotate);
   $dxf->addEntity($ellipse);
 }
 

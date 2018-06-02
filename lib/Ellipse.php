@@ -43,6 +43,16 @@ class Ellipse extends Entity {
   }
 
   /**
+   * Rotate the center and endpoint of the ellipsis around the given rotation center
+   * @param $rotate
+   * @param array $rotationCenter
+   */
+  public function rotate($rotate, $rotationCenter = array(0, 0, 0)) {
+    $this->rotatePoint($this->center, $rotationCenter, deg2rad($rotate));
+    $this->rotatePoint($this->endpoint, $rotationCenter, deg2rad($rotate));
+  }
+
+  /**
    * Public function to render an entity, returns a string representation of
    * the entity.
    * @return string
