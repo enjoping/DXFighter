@@ -262,8 +262,8 @@ class DXFighter {
   }
 
   private function readTablesSection($values) {
-    // TODO: The content of the table needs to be added
     $table = null;
+    $tableName = '';
     foreach ($values as $value) {
       if ($value['key'] == 0) {
         if ($value['value'] == 'TABLE') {
@@ -274,8 +274,29 @@ class DXFighter {
           continue;
         }
       }
-      if ($value['key'] == 2 && !isset($table)) {
-        $table = new Table($value['value']);
+      if ($value['key'] == 2) {
+        if (!isset($table)) {
+          $tableName = $value['value'];
+          $table = new Table($tableName);
+        } else {
+          switch ($tableName) {
+            case 'LTYPE':
+              $table->addEntry(new LType($value['value']));
+              break;
+            case 'STYLE':
+              $table->addEntry(new Style($value['value']));
+              break;
+            case 'LAYER':
+              $table->addEntry(new Layer($value['value']));
+              break;
+            case 'APPID':
+              $table->addEntry(new AppID($value['value']));
+              break;
+            case 'BLOCK_RECORD':
+              $table->addEntry(new BlockRecord($value['value']));
+              break;
+          }
+        }
       }
     }
   }
