@@ -214,6 +214,9 @@ class DXFighter {
             case 'TABLES':
               $this->readTablesSection($section['values']);
               break;
+            case 'BLOCKS':
+              $this->readBlocksSection($section['values']);
+              break;
             case 'ENTITIES':
               $this->readEntitiesSection($section['values']);
               break;
@@ -297,6 +300,24 @@ class DXFighter {
               break;
           }
         }
+      }
+    }
+  }
+
+  private function readBlocksSection($values) {
+    $block = [];
+    foreach ($values as $value) {
+      if ($value['key'] == 0) {
+        switch ($value['value']) {
+          case 'BLOCK':
+            $block = [];
+            break;
+          case 'ENDBLK':
+            $this->blocks->addItem(new Block($block[2]));
+            break;
+        }
+      } else {
+        $block[$value['key']] = $value['value'];
       }
     }
   }
