@@ -22,6 +22,7 @@ use DXFighter\lib\AppID,
   DXFighter\lib\Table;
 use DXFighter\lib\Ellipse;
 use DXFighter\lib\Line;
+use DXFighter\lib\Polyline;
 use DXFighter\lib\Text;
 use PHPUnit\Framework\Exception;
 
@@ -64,7 +65,7 @@ class DXFighter {
    *
    * @param bool $init
    */
-  function __construct($init = TRUE) {
+  function __construct($readPath = false) {
     $this->sections = array(
       'header',
       'classes',
@@ -77,8 +78,10 @@ class DXFighter {
     foreach ($this->sections as $section) {
       $this->{$section} = new Section($section);
     }
-    if ($init) {
+    if (!$readPath) {
       $this->addBasicObjects();
+    } else {
+      $this->read($readPath);
     }
   }
 
@@ -179,7 +182,7 @@ class DXFighter {
     fclose($fh);
   }
 
-  public function read($path) {
+  private function read($path) {
     if (!file_exists($path) || !filesize($path)) {
       throw new Exception('The path to the file is either invalid or the file is empty');
     }
@@ -220,11 +223,8 @@ class DXFighter {
             case 'ENTITIES':
               $this->readEntitiesSection($section['values']);
               break;
-            default:
-              if (count($section['values'])) {
-                // TODO BLOCKS and OBJECTS section are still missing
-                #echo "Section " . $section['name'] . " with " . count($section['values']) . " elements is currently ignored" . PHP_EOL;
-              }
+            case 'OBJECTS':
+              $this->readObjectsSection($section['values']);
               break;
           }
           continue;
@@ -329,14 +329,20 @@ class DXFighter {
     // TODO most entity types are still missing
     foreach ($values as $value) {
       if ($value['key'] == 0) {
-        if (in_array($entityType, $types) && !empty($data)) {
+        if ((in_array($entityType, $types) && !empty($data)) || in_array($entityType, ['POLYLINE', 'VERTEX']) && $value['value'] == 'SEQEND') {
           $this->addReadEntity($entityType, $data);
+          $data = [];
         }
         $entityType = $value['value'];
-        $data = [];
+        if ($value['value'] == 'VERTEX') {
+          $data['points'][] = [];
+        }
       } else {
-        if (in_array($entityType, $types)) {
+        if (in_array($entityType, $types) || $entityType == 'POLYLINE') {
           $data[$value['key']] = $value['value'];
+        }
+        if ($entityType == 'VERTEX') {
+          $data['points'][count($data['points']) - 1][$value['key']] = $value['value'];
         }
       }
     }
@@ -370,6 +376,9 @@ class DXFighter {
           $data[230] ? $data[230] : 1
         ];
         $line = new Line($start, $end, $thickness, $extrusion);
+        if (isset($data[62])) {
+          $line->setColor($data[62]);
+        }
         $this->addEntity($line);
         break;
       case 'ELLIPSE':
@@ -383,8 +392,44 @@ class DXFighter {
           $data[230] ? $data[230] : 1
         ];
         $ellipse = new Ellipse($center, $endpoint, $data[40], $start, $end, $extrusion);
+        if (isset($data[62])) {
+          $ellipse->setColor($data[62]);
+        }
         $this->addEntity($ellipse);
         break;
+      case 'POLYLINE':
+      case 'VERTEX':
+        switch($data[100]) {
+          case 'AcDb2dPolyline':
+            $polyline = new Polyline(2);
+            break;
+          case 'AcDb3dPolyline':
+            $polyline = new Polyline(3);
+            break;
+          default:
+            echo 'The polyline type ' . $data[100] . ' has not been found' . PHP_EOL;
+            return;
+        }
+        if (isset($data[62])) {
+          $polyline->setColor($data[62]);
+        }
+        if (isset($data[70])) {
+          $bin = decbin($data[70]);
+          for($i = strlen((string)$bin) - 1; $i >= 0; $i--) {
+            if (boolval($bin[$i])) {
+              $polyline->setFlag($i, $bin[$i]);
+            }
+          }
+        }
+        foreach($data['points'] as $point) {
+          $polyline->addPoint([$point[10], $point[20], $point[30]]);
+        }
+        $this->addEntity($polyline);
     }
+  }
+
+  private function readObjectsSection($values) {
+    // TODO add the actually read objects
+    $this->objects->addItem(new Dictionary(array('ACAD_GROUP')));
   }
 }

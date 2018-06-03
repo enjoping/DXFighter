@@ -71,6 +71,5 @@ for($i=0; $i < 2; $i++) {
 $dxf->saveAs('dxfighter.dxf');
 
 
-$reader = new \DXFighter\DXFighter(false);
-$reader->read('dxfighter.dxf');
+$reader = new \DXFighter\DXFighter('dxfighter.dxf');
 $reader->saveAs('dxfighter2.dxf');
