@@ -81,7 +81,7 @@ class DXFighter {
     if (!$readPath) {
       $this->addBasicObjects();
     } else {
-      $this->read($readPath);
+      $this->read($readPath, false);
     }
   }
 
@@ -133,6 +133,20 @@ class DXFighter {
    */
   public function addEntity($entity) {
     $this->entities->addItem($entity);
+  }
+
+  /**
+   * Public function to load a DXF file and add all entities to the DXF object
+   * @param string $path a file path to the DXF file to read
+   * @param array $move Vector to move all entities with
+   * @param int $rotate a degree value to rotate all entities with
+   */
+  public function addEntitiesFromFile($path, $move = [0,0,0], $rotate = 0) {
+    $this->read($path, true, $move, $rotate);
+  }
+
+  public function getEntities() {
+    return $this->entities->getItems();
   }
 
   /**
@@ -212,7 +226,7 @@ class DXFighter {
     fclose($fh);
   }
 
-  private function read($path) {
+  private function read($path, $entitiesOnly = false, $move = [0,0,0], $rotate = 0) {
     if (!file_exists($path) || !filesize($path)) {
       throw new Exception('The path to the file is either invalid or the file is empty');
     }
@@ -225,10 +239,10 @@ class DXFighter {
         'value' => $lines[$i]
       ];
     }
-    $this->readDocument($values);
+    $this->readDocument($values, $entitiesOnly, $move, $rotate);
   }
 
-  private function readDocument($values) {
+  private function readDocument($values, $entitiesOnly, $move = [0,0,0], $rotate = 0) {
     $section_pattern = [
       'name' => '',
       'values' => [],
@@ -240,22 +254,28 @@ class DXFighter {
           $section = $section_pattern;
           continue;
         } elseif ($value['value'] == 'ENDSEC') {
-          switch ($section['name']) {
-            case 'HEADER':
-              $this->readHeaderSection($section['values']);
-              break;
-            case 'TABLES':
-              $this->readTablesSection($section['values']);
-              break;
-            case 'BLOCKS':
-              $this->readBlocksSection($section['values']);
-              break;
-            case 'ENTITIES':
-              $this->readEntitiesSection($section['values']);
-              break;
-            case 'OBJECTS':
-              $this->readObjectsSection($section['values']);
-              break;
+          if ($entitiesOnly) {
+            if ($section['name'] == 'ENTITIES') {
+              $this->readEntitiesSection($section['values'], $move, $rotate);
+            }
+          } else {
+            switch ($section['name']) {
+              case 'HEADER':
+                $this->readHeaderSection($section['values']);
+                break;
+              case 'TABLES':
+                $this->readTablesSection($section['values']);
+                break;
+              case 'BLOCKS':
+                $this->readBlocksSection($section['values']);
+                break;
+              case 'ENTITIES':
+                $this->readEntitiesSection($section['values'], $move, $rotate);
+                break;
+              case 'OBJECTS':
+                $this->readObjectsSection($section['values']);
+                break;
+            }
           }
           continue;
         }
@@ -352,7 +372,7 @@ class DXFighter {
     }
   }
 
-  private function readEntitiesSection($values) {
+  private function readEntitiesSection($values, $move = [0,0,0], $rotate = 0) {
     $entityType = '';
     $data = [];
     $types = ['TEXT', 'LINE', 'ELLIPSE'];
@@ -360,7 +380,7 @@ class DXFighter {
     foreach ($values as $value) {
       if ($value['key'] == 0) {
         if ((in_array($entityType, $types) && !empty($data)) || in_array($entityType, ['POLYLINE', 'VERTEX']) && $value['value'] == 'SEQEND') {
-          $this->addReadEntity($entityType, $data);
+          $this->addReadEntity($entityType, $data, $move, $rotate);
           $data = [];
         }
         $entityType = $value['value'];
@@ -377,11 +397,11 @@ class DXFighter {
       }
     }
     if (in_array($entityType, $types) && !empty($data)) {
-      $this->addReadEntity($entityType, $data);
+      $this->addReadEntity($entityType, $data, $move, $rotate);
     }
   }
 
-  private function addReadEntity($type, $data) {
+  private function addReadEntity($type, $data, $move = [0,0,0], $rotate = 0) {
     switch ($type) {
       case 'TEXT':
         $point = [$data[10], $data[20], $data[30]];
@@ -394,6 +414,8 @@ class DXFighter {
         if ($data[73]) {
           $text->setVerticalJustification($data[73]);
         }
+        $text->move($move);
+        $text->rotate($rotate);
         $this->addEntity($text);
         break;
       case 'LINE':
@@ -409,6 +431,8 @@ class DXFighter {
         if (isset($data[62])) {
           $line->setColor($data[62]);
         }
+        $line->move($move);
+        $line->rotate($rotate);
         $this->addEntity($line);
         break;
       case 'ELLIPSE':
@@ -425,6 +449,8 @@ class DXFighter {
         if (isset($data[62])) {
           $ellipse->setColor($data[62]);
         }
+        $ellipse->move($move);
+        $ellipse->rotate($rotate);
         $this->addEntity($ellipse);
         break;
       case 'POLYLINE':
@@ -454,6 +480,8 @@ class DXFighter {
         foreach($data['points'] as $point) {
           $polyline->addPoint([$point[10], $point[20], $point[30]]);
         }
+        $polyline->move($move);
+        $polyline->rotate($rotate);
         $this->addEntity($polyline);
     }
   }

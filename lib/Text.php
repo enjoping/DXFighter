@@ -71,7 +71,7 @@ class Text extends Entity {
    * @param array $rotationCenter center point of the rotation
    */
   public function rotate($rotate, $rotationCenter = array(0, 0, 0)) {
-    $this->rotation = $rotate;
+    $this->rotation += $rotate;
     $this->rotatePoint($this->point, $rotationCenter, deg2rad($rotate));
   }
 
