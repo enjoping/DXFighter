@@ -72,4 +72,7 @@ $dxf->saveAs('dxfighter.dxf');
 
 
 $reader = new \DXFighter\DXFighter('dxfighter.dxf');
+$reader->addEntity(new \DXFighter\lib\Text("You can add any further objects as needed now", array(50,90,0), 20));
+$reader->move(array(50, 50, 0));
+$reader->rotate(45);
 $reader->saveAs('dxfighter2.dxf');

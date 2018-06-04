@@ -33,6 +33,22 @@ class Entity extends BasicObject {
   }
 
   /**
+   * protected move function
+   * Move a point with a given move vector
+   *
+   * @param $point array
+   * @param $move array
+   */
+  protected function movePoint(&$point, $move) {
+    for($i = 0; $i < count($move); $i++) {
+      if(!isset($point[$i])) {
+        $point[$i] = 0;
+      }
+      $point[$i] += $move[$i];
+    }
+  }
+
+  /**
    * protected rotate function
    * Rotate one point around a center point with an angle
    *

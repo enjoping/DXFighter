@@ -43,6 +43,14 @@ class Ellipse extends Entity {
   }
 
   /**
+   * Public function to move an Ellipse entity
+   * @param array $move vector to move the entity with
+   */
+  public function move($move) {
+    $this->movePoint($this->center, $move);
+  }
+
+  /**
    * Rotate the center and endpoint of the ellipsis around the given rotation center
    * @param $rotate
    * @param array $rotationCenter

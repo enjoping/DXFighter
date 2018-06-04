@@ -51,6 +51,10 @@ class Section {
     }
   }
 
+  public function getItems() {
+    return $this->items;
+  }
+
   /**
    * Public function to render an entity, returns a string representation of
    * the entity.

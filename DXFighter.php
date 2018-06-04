@@ -136,6 +136,36 @@ class DXFighter {
   }
 
   /**
+   * Public function to move all entities on a DXF File
+   * @param array $move vector to move the entity with
+   */
+  public function move($move) {
+    foreach ($this->entities->getItems() as $entity) {
+      if (method_exists($entity, 'move')) {
+        $entity->move($move);
+      } else {
+        echo 'The ' . get_class($entity) . ' class does not have a move function.' . PHP_EOL;
+      }
+    }
+  }
+
+
+  /**
+   * Public function to rotate all entities on a DXF File
+   * @param int $rotate degree value used for the rotation
+   * @param array $rotationCenter center point of the rotation
+   */
+  public function rotate($rotate, $rotationCenter = array(0, 0, 0)) {
+    foreach ($this->entities->getItems() as $entity) {
+      if (method_exists($entity, 'rotate')) {
+        $entity->rotate($rotate, $rotationCenter);
+      } else {
+        echo 'The ' . get_class($entity) . ' class does not have a rotate function.' . PHP_EOL;
+      }
+    }
+  }
+
+  /**
    * Outputs an array representation of the DXF
    *
    * @return array

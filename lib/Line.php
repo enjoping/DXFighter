@@ -37,6 +37,15 @@ class Line extends Entity {
   }
 
   /**
+   * Public function to move a Line entity
+   * @param array $move vector to move the entity with
+   */
+  public function move($move) {
+    $this->movePoint($this->start, $move);
+    $this->movePoint($this->end, $move);
+  }
+
+  /**
    * Rotate the begin and end of the line around the given rotation center
    * @param $rotate
    * @param array $rotationCenter

@@ -58,6 +58,24 @@ class Text extends Entity {
   }
 
   /**
+   * Public function to move a Text entity
+   * @param array $move vector to move the entity with
+   */
+  public function move($move) {
+    $this->movePoint($this->point, $move);
+  }
+
+  /**
+   * Public function to rotate a Text objet
+   * @param int $rotate degree value used for the rotation
+   * @param array $rotationCenter center point of the rotation
+   */
+  public function rotate($rotate, $rotationCenter = array(0, 0, 0)) {
+    $this->rotation = $rotate;
+    $this->rotatePoint($this->point, $rotationCenter, deg2rad($rotate));
+  }
+
+  /**
    * Public function to render an entity, returns a string representation of
    * the entity.
    * @return string

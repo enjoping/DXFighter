@@ -48,6 +48,16 @@ class Polyline extends Entity {
   }
 
   /**
+   * Public function to move a Polyline entity
+   * @param array $move vector to move the entity with
+   */
+  public function move($move) {
+    foreach ($this->points as $point) {
+      $point->move($move);
+    }
+  }
+
+  /**
    * Public function to rotate all points of a polyline
    * @param int $rotate degree value used for the rotation
    * @param array $rotationCenter center point of the rotation

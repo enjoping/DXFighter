@@ -39,6 +39,14 @@ class Vertex extends Entity {
   }
 
   /**
+   * Public function to move a Polyline entity
+   * @param array $move vector to move the entity with
+   */
+  public function move($move) {
+    $this->movePoint($this->point, $move);
+  }
+
+  /**
    * @param $angle
    * @param $center
    */
