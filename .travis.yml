@@ -13,5 +13,6 @@ before_script: composer install
 script:
   - php ./vendor/phpcheckstyle/phpcheckstyle/run.php --src ./DXFighter.php --src ./lib --config ./phpcheckstyle.xml
   - ./vendor/bin/phpunit --bootstrap vendor/autoload.php --testdox tests
+  - sonar-scanner
 notifications:
     slack: laecherbar:y1NWyusbhnKv2tGC3XQCmmJW
