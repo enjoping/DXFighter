@@ -4,6 +4,11 @@ php:
 cache:
   directories:
     - .composer/cache
+addons:
+  sonarcloud:
+    organization: "enjoping-github" # the key of the org you chose at step #3
+    token:
+      secure: s1oKS1qyQxMcvKkOl1ZyY0LNKTad+rV3jiod7CL14KVEfrgY1MqDDW6Z9ifaa2KFBoiSDRdJTxcOcz4jlkeSrGNdvOexAgg4BEhPHFSOAa8yTBak17iQKk4CzQOSx/dqqP2/ZZVj21K5m/NK4t1dqILNH5aIfdG6yk0cp9UC4x4pa5xcuY04eyZZZOT82BRaleGefAEJKVfc175a5HUceuktgN6MY8DSVZDNby4YehfPrGVG+edFg0cHIeQwg4pVCSnXnxPZd7iRJXW3ioTQ0feGyAYgUcoaex7su9hOj+gZhyT9fgcepChpMylNrmUEHNsnTCTzkULk9eZBzWgIa2nYCEBiePitMzcrjpiXS2le4yrXusVn+rsDuBMHG9C2ezOAms7JU9DCVpYmWas+McbjW+rK2n77T4UWT9aKtPcRjCXvKBGwFEHmV9WhGujOurnge5ha8FzG9XnJfFVTqvWoTvtEUz8FhMw5XTXGGqIGmPqeNmzeJi+33ejSLLy8bvVUWPFOWN7QHl+rCOR3llZulBNjR7CrMACcahXKdnkt8XRBf3sVhaJ6hCehJtZAhIvM9/QnPOA4zfPs8XjooQT2kbbFGoRjUgGOcW4XE6AS+SEN1s76HkbinuuB0AO9KR0u4U/mBSfkph15eUjLY3JcxuCnLkFdzwbtzzVYg7w=
 before_script: composer install
 script:
   - php ./vendor/phpcheckstyle/phpcheckstyle/run.php --src ./DXFighter.php --src ./lib --config ./phpcheckstyle.xml
