@@ -10,7 +10,7 @@
 
 namespace DXFighter\lib;
 
-const pointItemLabel = 'point';
+const POINTITEMLABEL = 'point';
 
 /**
  * Class SystemVariable
@@ -41,9 +41,9 @@ class SystemVariable extends BasicObject {
   public function render() {
     $output = array();
     array_push($output, 9, "$" . strtoupper($this->variable));
-    if (isset($this->values[pointItemLabel])) {
-      array_push($output, $this->point($this->values[pointItemLabel]));
-      unset($this->values[pointItemLabel]);
+    if (isset($this->values[POINTITEMLABEL])) {
+      array_push($output, $this->point($this->values[POINTITEMLABEL]));
+      unset($this->values[POINTITEMLABEL]);
     }
     foreach ($this->values as $groupCode => $value) {
       array_push($output, $groupCode, $value);
