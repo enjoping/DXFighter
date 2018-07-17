@@ -1,4 +1,4 @@
-# DXFighter [![Build Status](https://travis-ci.org/enjoping/DXFighter.svg?branch=master)](https://travis-ci.org/enjoping/DXFighter)
+# DXFighter [![Build Status](https://travis-ci.org/enjoping/DXFighter.svg?branch=master)](https://travis-ci.org/enjoping/DXFighter) ![alert_status](https://sonarcloud.io/api/project_badges/measure?project=DXFighter&metric=alert_status) ![coverage](https://sonarcloud.io/api/project_badges/measure?project=DXFighter&metric=coverage) ![security_rating](https://sonarcloud.io/api/project_badges/measure?project=DXFighter&metric=security_rating) ![vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=DXFighter&metric=vulnerabilities) 
 ![DXFighter](logo.png)  
 **!Currently in active development!**  
 A new DXF writer and reader in PHP which outputs AC1012 (R15) DXF files.  
