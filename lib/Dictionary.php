@@ -10,6 +10,8 @@
 
 namespace DXFighter\lib;
 
+const entryOwnerLabel = 'owner';
+
 /**
  * Class BlockRecord
  * @package DXFighter\lib
@@ -26,7 +28,7 @@ class Dictionary extends Entity {
       foreach ($entries as $entry) {
         array_push($this->entries, array(
           'name' => $entry,
-          'owner' => new Dictionary()
+          entryOwnerLabel => new Dictionary()
         ));
       }
     }
@@ -47,8 +49,8 @@ class Dictionary extends Entity {
     array_push($output, 100, 'AcDbDictionary');
     foreach ($this->entries as $entry) {
       array_push($output, 3, $entry['name']);
-      array_push($output, 350, $entry['owner']->getHandle());
-      $entryOutput .= $entry['owner']->render();
+      array_push($output, 350, $entry[entryOwnerLabel]->getHandle());
+      $entryOutput .= $entry[entryOwnerLabel]->render();
     }
     array_push($output, 1001, 'ACAD');
     array_push($output, 1000, 'TREAT_AS_HARD');

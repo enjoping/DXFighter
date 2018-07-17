@@ -26,13 +26,6 @@ class Entity extends BasicObject {
   protected $hidden = 0;
 
   /**
-   * Entity constructor.
-   */
-  function __construct() {
-    parent::__construct();
-  }
-
-  /**
    * protected move function
    * Move a point with a given move vector
    *

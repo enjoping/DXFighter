@@ -78,8 +78,7 @@ class Section {
    * @return array
    */
   public function toArray() {
-    $output = array();
-    return $output;
+    return [];
   }
 
 }
