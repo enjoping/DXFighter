@@ -52,6 +52,6 @@ class LWPolyline extends Entity {
       array_push($output, $this->point($point));
     }
 
-    return implode($output, PHP_EOL);
+    return implode(PHP_EOL, $output);
   }
 }

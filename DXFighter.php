@@ -63,7 +63,7 @@ class DXFighter {
    * DXFighter constructor.
    * sets basic values needed for further usage if the init flag is set
    *
-   * @param bool $init
+   * @param string|bool $readPath
    */
   function __construct($readPath = false) {
     $this->sections = array(
@@ -205,7 +205,7 @@ class DXFighter {
       $output[] = $this->{$section}->render();
     }
     array_push($output, 0, "EOF");
-    $outputString = implode($output, PHP_EOL);
+    $outputString = implode(PHP_EOL, $output);
 
     if ($return) {
       echo nl2br($outputString);
@@ -233,10 +233,10 @@ class DXFighter {
     $content = file_get_contents($path);
     $lines = preg_split ('/$\R?^/m', $content);
     $values = [];
-    for ($i = 0; $i < count($lines); $i++) {
+    for ($i = 0; $i + 1 < count($lines); $i++) {
       $values[] = [
-        'key' => $lines[$i++],
-        'value' => $lines[$i]
+        'key' => trim($lines[$i++]),
+        'value' => trim($lines[$i])
       ];
     }
     $this->readDocument($values, $entitiesOnly, $move, $rotate);
@@ -455,16 +455,20 @@ class DXFighter {
         break;
       case 'POLYLINE':
       case 'VERTEX':
-        switch($data[100]) {
-          case 'AcDb2dPolyline':
-            $polyline = new Polyline(2);
-            break;
-          case 'AcDb3dPolyline':
-            $polyline = new Polyline(3);
-            break;
-          default:
-            echo 'The polyline type ' . $data[100] . ' has not been found' . PHP_EOL;
-            return;
+        if (isset($data[100])) {
+          switch ($data[100]) {
+            case 'AcDb2dPolyline':
+              $polyline = new Polyline(2);
+              break;
+            case 'AcDb3dPolyline':
+              $polyline = new Polyline(3);
+              break;
+            default:
+              echo 'The polyline type ' . $data[100] . ' has not been found' . PHP_EOL;
+              return;
+          }
+        } else {
+          $polyline = new Polyline(2);
         }
         if (isset($data[62])) {
           $polyline->setColor($data[62]);

@@ -56,6 +56,6 @@ class Point extends Entity {
     array_push($output, $this->point($this->point));
     array_push($output, $this->point($this->extrusion, 200));
     array_push($output, 50, $this->angle);
-    return implode($output, PHP_EOL);
+    return implode(PHP_EOL, $output);
   }
 }

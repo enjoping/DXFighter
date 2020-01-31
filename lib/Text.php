@@ -93,6 +93,6 @@ class Text extends Entity {
     array_push($output, 72, $this->horizontalJustification);
     array_push($output, 100, 'AcDbText');
     array_push($output, 73, $this->verticalJustification);
-    return implode($output, PHP_EOL);
+    return implode(PHP_EOL, $output);
   }
 }

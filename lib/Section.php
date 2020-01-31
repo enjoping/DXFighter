@@ -68,7 +68,7 @@ class Section {
       array_push($output, $item->render());
     }
     array_push($output, 0, "ENDSEC");
-    return implode($output, PHP_EOL);
+    return implode(PHP_EOL, $output);
   }
 
   /**

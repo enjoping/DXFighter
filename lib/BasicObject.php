@@ -73,6 +73,6 @@ class BasicObject {
       array_push($output, $groupCode, sprintf("%.3f", $value));
       $groupCode += 10;
     }
-    return implode($output, PHP_EOL);
+    return implode(PHP_EOL, $output);
   }
 }

@@ -87,6 +87,6 @@ class Polyline extends Entity {
     }
 
     array_push($output, $this->seqend->render());
-    return implode($output, PHP_EOL);
+    return implode(PHP_EOL, $output);
   }
 }

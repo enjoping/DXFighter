@@ -48,6 +48,6 @@ class SystemVariable extends BasicObject {
     foreach ($this->values as $groupCode => $value) {
       array_push($output, $groupCode, $value);
     }
-    return implode($output, PHP_EOL);
+    return implode(PHP_EOL, $output);
   }
 }

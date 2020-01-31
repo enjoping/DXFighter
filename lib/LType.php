@@ -67,6 +67,6 @@ class LType extends BasicObject {
     array_push($output, 73, count($this->lineElements));
     array_push($output, 40, array_sum($absolutLenght));
     //TODO add working lineElements
-    return implode($output, PHP_EOL);
+    return implode(PHP_EOL, $output);
   }
 }

@@ -66,6 +66,6 @@ class Vertex extends Entity {
     array_push($output, $this->point($this->point));
     array_push($output, 42, $this->bulge);
     array_push($output, 70, $this->flagsToString());
-    return implode($output, PHP_EOL);
+    return implode(PHP_EOL, $output);
   }
 }

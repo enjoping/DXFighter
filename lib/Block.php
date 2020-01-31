@@ -47,6 +47,6 @@ class Block extends Entity {
     array_push($output, 3, strtoupper($this->name));
     array_push($output, 1, $this->xrefPath);
     array_push($output, $this->endblk->render());
-    return implode($output, PHP_EOL);
+    return implode(PHP_EOL, $output);
   }
 }

@@ -67,6 +67,6 @@ class Line extends Entity {
     array_push($output, $this->point($this->start));
     array_push($output, $this->point($this->end, 1));
     array_push($output, $this->point($this->extrusion, 200));
-    return implode($output, PHP_EOL);
+    return implode(PHP_EOL, $output);
   }
 }

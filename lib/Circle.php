@@ -56,6 +56,6 @@ class Circle extends Entity {
     array_push($output, $this->point($this->point));
     array_push($output, 40, $this->radius);
     array_push($output, $this->point($this->extrusion, 200));
-    return implode($output, PHP_EOL);
+    return implode(PHP_EOL, $output);
   }
 }

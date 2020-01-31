@@ -36,6 +36,6 @@ class Endblk extends Entity {
   public function render() {
     $output = parent::render();
     array_push($output, 100, 'AcDbBlockEnd');
-    return implode($output, PHP_EOL);
+    return implode(PHP_EOL, $output);
   }
 }

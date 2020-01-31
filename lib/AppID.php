@@ -45,6 +45,6 @@ class AppID extends BasicObject {
     array_push($output, 100, "AcDbRegAppTableRecord");
     array_push($output, 2, strtoupper($this->name));
     array_push($output, 70, $this->flag);
-    return implode($output, PHP_EOL);
+    return implode(PHP_EOL, $output);
   }
 }

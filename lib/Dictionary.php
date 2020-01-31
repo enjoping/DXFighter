@@ -58,6 +58,6 @@ class Dictionary extends Entity {
     if (!empty($entryOutput)) {
       array_push($output, $entryOutput);
     }
-    return implode($output, PHP_EOL);
+    return implode(PHP_EOL, $output);
   }
 }

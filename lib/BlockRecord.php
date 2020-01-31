@@ -38,6 +38,6 @@ class BlockRecord extends BasicObject {
     array_push($output, 100, "AcDbSymbolTableRecord");
     array_push($output, 100, "AcDbBlockTableRecord");
     array_push($output, 2, strtoupper($this->name));
-    return implode($output, PHP_EOL);
+    return implode(PHP_EOL, $output);
   }
 }

@@ -45,6 +45,6 @@ class Arc extends Circle {
     array_push($output, 100, 'AcDbArc');
     array_push($output, 50, $this->start);
     array_push($output, 51, $this->end);
-    return implode($output, PHP_EOL);
+    return implode(PHP_EOL, $output);
   }
 }

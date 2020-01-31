@@ -55,6 +55,6 @@ class Table extends BasicObject {
       $output[] = $entry->render();
     }
     array_push($output, 0, "ENDTAB");
-    return implode($output, PHP_EOL);
+    return implode(PHP_EOL, $output);
   }
 }

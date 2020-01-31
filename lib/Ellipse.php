@@ -74,6 +74,6 @@ class Ellipse extends Entity {
     array_push($output, 40, $this->ratio);
     array_push($output, 41, $this->start);
     array_push($output, 42, $this->end);
-    return implode($output, PHP_EOL);
+    return implode(PHP_EOL, $output);
   }
 }

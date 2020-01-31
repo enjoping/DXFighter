@@ -35,6 +35,6 @@ class Seqend extends Entity {
    */
   public function render() {
     $output = parent::render();
-    return implode($output, PHP_EOL);
+    return implode(PHP_EOL, $output);
   }
 }
