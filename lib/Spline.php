@@ -23,7 +23,7 @@ class Spline extends Entity {
   protected $degree = 1;
 
   /**
-   * Polyline constructor.
+   * Spline constructor.
    * @param int $degree
    * @param array $base
    * @param array $start

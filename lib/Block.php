@@ -18,7 +18,8 @@ class Block extends Entity {
   protected $name;
   protected $xrefPath;
   protected $endblk;
-  protected $point = array(0, 0, 0);
+  protected $point = [0, 0, 0];
+  protected $entities = [];
 
   /**
    * Block constructor.
@@ -34,6 +35,15 @@ class Block extends Entity {
   }
 
   /**
+   * Adds an Entity to the block
+   *
+   * @param Entity $entity
+   */
+  public function addEntity(Entity $entity) {
+    $this->entities[] = $entity;
+  }
+
+  /**
    * Public function to render an entity, returns a string representation of
    * the entity.
    * @return string
@@ -46,6 +56,9 @@ class Block extends Entity {
     array_push($output, $this->point($this->point));
     array_push($output, 3, strtoupper($this->name));
     array_push($output, 1, $this->xrefPath);
+    foreach($this->entities as $entity) {
+      array_push($output, $entity->render());
+    }
     array_push($output, $this->endblk->render());
     return implode(PHP_EOL, $output);
   }

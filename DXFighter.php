@@ -21,6 +21,7 @@ use DXFighter\lib\AppID,
   DXFighter\lib\SystemVariable,
   DXFighter\lib\Table;
 use DXFighter\lib\Ellipse;
+use DXFighter\lib\Insert;
 use DXFighter\lib\Line;
 use DXFighter\lib\Polyline;
 use DXFighter\lib\Spline;
@@ -380,7 +381,12 @@ class DXFighter {
             $block = [];
             break;
           case 'ENDBLK':
-            $this->blocks->addItem(new Block($block[2]));
+            $blockEntity = new Block($block[2]);
+            $entities = $this->readEntitiesSection($entitiesSection);
+            foreach ($entities as $entity) {
+              $blockEntity->addEntity($entity);
+            }
+            $this->blocks->addItem($blockEntity);
             break;
           default:
             $entitiesSection[] = $value;
@@ -397,7 +403,7 @@ class DXFighter {
     $entities = [];
     $entityType = '';
     $data = [];
-    $types = ['TEXT', 'LINE', 'ELLIPSE', 'SPLINE'];
+    $types = ['TEXT', 'LINE', 'ELLIPSE', 'SPLINE', 'INSERT'];
     // TODO most entity types are still missing
     foreach ($values as $value) {
       if ($value['key'] == 0) {
@@ -531,6 +537,9 @@ class DXFighter {
           $spline->addPoint([$point[10], $point[20], $point[30]]);
         }
         return $spline;
+      case 'INSERT':
+        $insert = new Insert($data[2]);
+        return $insert;
       case 'POLYLINE':
       case 'VERTEX':
         if (isset($data[100])) {
