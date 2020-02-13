@@ -31,6 +31,14 @@ class Insert extends Entity {
   }
 
   /**
+   * Public function to move an Insert entity
+   * @param array $move vector to move the entity with
+   */
+  public function move($move) {
+    $this->movePoint($this->point, $move);
+  }
+
+  /**
    * Public function to render an entity, returns a string representation of
    * the entity.
    * @return string

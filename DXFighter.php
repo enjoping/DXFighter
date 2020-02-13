@@ -539,6 +539,7 @@ class DXFighter {
         return $spline;
       case 'INSERT':
         $insert = new Insert($data[2]);
+        $insert->move($move);
         return $insert;
       case 'POLYLINE':
       case 'VERTEX':
