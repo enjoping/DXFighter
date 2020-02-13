@@ -23,6 +23,7 @@ use DXFighter\lib\AppID,
 use DXFighter\lib\Ellipse;
 use DXFighter\lib\Line;
 use DXFighter\lib\Polyline;
+use DXFighter\lib\Spline;
 use DXFighter\lib\Text;
 use PHPUnit\Framework\Exception;
 
@@ -133,6 +134,16 @@ class DXFighter {
    */
   public function addEntity($entity) {
     $this->entities->addItem($entity);
+  }
+
+  /**
+   * Handler to add multiple entities to the DXFighter instance
+   * @param $entities array
+   */
+  public function addMultipleEntities($entities) {
+    foreach($entities as $entity) {
+      $this->entities->addItem($entity);
+    }
   }
 
   /**
@@ -256,7 +267,7 @@ class DXFighter {
         } elseif ($value['value'] == 'ENDSEC') {
           if ($entitiesOnly) {
             if ($section['name'] == 'ENTITIES') {
-              $this->readEntitiesSection($section['values'], $move, $rotate);
+              $this->readEntitiesSection($section['values'], true, $move, $rotate);
             }
           } else {
             switch ($section['name']) {
@@ -270,7 +281,7 @@ class DXFighter {
                 $this->readBlocksSection($section['values']);
                 break;
               case 'ENTITIES':
-                $this->readEntitiesSection($section['values'], $move, $rotate);
+                $this->readEntitiesSection($section['values'], true, $move, $rotate);
                 break;
               case 'OBJECTS':
                 $this->readObjectsSection($section['values']);
@@ -310,7 +321,11 @@ class DXFighter {
       $variables[] = $variable;
     }
     foreach($variables as $variable) {
-      $this->header->addItem(new SystemVariable(str_replace('$', '', $variable['name']), $variable['values']));
+      $name = str_replace('$', '', $variable['name']);
+      if (strtoupper($name) == 'ACADVER') {
+        $variable['values'] = [1 => 'AC1012'];
+      }
+      $this->header->addItem(new SystemVariable($name, $variable['values']));
     }
   }
 
@@ -356,6 +371,8 @@ class DXFighter {
 
   private function readBlocksSection($values) {
     $block = [];
+    $entitiesSection = [];
+
     foreach ($values as $value) {
       if ($value['key'] == 0) {
         switch ($value['value']) {
@@ -365,40 +382,71 @@ class DXFighter {
           case 'ENDBLK':
             $this->blocks->addItem(new Block($block[2]));
             break;
+          default:
+            $entitiesSection[] = $value;
         }
-      } else {
+      } elseif (empty($entitiesSection)) {
         $block[$value['key']] = $value['value'];
+      } else {
+        $entitiesSection[] = $value;
       }
     }
   }
 
-  private function readEntitiesSection($values, $move = [0,0,0], $rotate = 0) {
+  private function readEntitiesSection($values, $addEntities = false, $move = [0,0,0], $rotate = 0) {
+    $entities = [];
     $entityType = '';
     $data = [];
-    $types = ['TEXT', 'LINE', 'ELLIPSE'];
+    $types = ['TEXT', 'LINE', 'ELLIPSE', 'SPLINE'];
     // TODO most entity types are still missing
     foreach ($values as $value) {
       if ($value['key'] == 0) {
         if ((in_array($entityType, $types) && !empty($data)) || in_array($entityType, ['POLYLINE', 'VERTEX']) && $value['value'] == 'SEQEND') {
-          $this->addReadEntity($entityType, $data, $move, $rotate);
+          $entity = $this->addReadEntity($entityType, $data, $move, $rotate);
+          if ($entity) {
+            $entities[] = $entity;
+          }
           $data = [];
         }
         $entityType = $value['value'];
         if ($value['value'] == 'VERTEX') {
           $data['points'][] = [];
         }
-      } else {
-        if (in_array($entityType, $types) || $entityType == 'POLYLINE') {
-          $data[$value['key']] = $value['value'];
+        if ($value['value'] == 'SPLINE') {
+          $data['knots'] = [];
+          $data['points'] = [];
         }
-        if ($entityType == 'VERTEX') {
+      } else {
+        if ($entityType == 'SPLINE' && in_array($value['key'], [10, 20, 30, 40])) {
+          switch ($value['key']) {
+            case 10:
+              $data['points'][] = [10 => $value['value'], 20 => 0, 30 => 0];
+              break;
+            case 20:
+            case 30:
+              $data['points'][sizeof($data['points']) -1 ][$value['key']] = $value['value'];
+              break;
+            case 40:
+              $data['knots'][] = $value['value'];
+              break;
+          }
+        } elseif (in_array($entityType, $types) || $entityType == 'POLYLINE') {
+          $data[$value['key']] = $value['value'];
+        } elseif ($entityType == 'VERTEX') {
           $data['points'][count($data['points']) - 1][$value['key']] = $value['value'];
         }
       }
     }
     if (in_array($entityType, $types) && !empty($data)) {
-      $this->addReadEntity($entityType, $data, $move, $rotate);
+      $entity = $this->addReadEntity($entityType, $data, $move, $rotate);
+      if ($entity) {
+        $entities[] = $entity;
+      }
     }
+    if ($addEntities) {
+      $this->addMultipleEntities($entities);
+    }
+    return $entities;
   }
 
   private function addReadEntity($type, $data, $move = [0,0,0], $rotate = 0) {
@@ -416,8 +464,7 @@ class DXFighter {
         }
         $text->move($move);
         $text->rotate($rotate);
-        $this->addEntity($text);
-        break;
+        return $text;
       case 'LINE':
         $start = [$data[10], $data[20], $data[30]];
         $end = [$data[11], $data[21], $data[31]];
@@ -433,8 +480,7 @@ class DXFighter {
         }
         $line->move($move);
         $line->rotate($rotate);
-        $this->addEntity($line);
-        break;
+        return $line;
       case 'ELLIPSE':
         $center = [$data[10], $data[20], $data[30]];
         $endpoint = [$data[11], $data[21], $data[31]];
@@ -451,8 +497,40 @@ class DXFighter {
         }
         $ellipse->move($move);
         $ellipse->rotate($rotate);
-        $this->addEntity($ellipse);
-        break;
+        return $ellipse;
+      case 'SPLINE':
+        $base = [0, 0, 0];
+        if (isset($data[210])) {
+          $base = [$data[210], $data[220], $data[230]];
+        }
+        $start = [0, 0, 0];
+        if (isset($data[12])) {
+          $start = [$data[12], $data[22], $data[32]];
+        }
+        $end = [0, 0, 0];
+        if (isset($data[13])) {
+          $end = [$data[13], $data[23], $data[33]];
+        }
+        $spline = new Spline(isset($data[71]) ? $data[71] : 1, $base, $start, $end);
+        if (isset($data[62])) {
+          $spline->setColor($data[62]);
+        }
+        if (isset($data[70])) {
+          $bin = decbin($data[70]);
+          $length = strlen((string)$bin);
+          for($i = $length - 1; $i >= 0; $i--) {
+            if (boolval($bin[$i])) {
+              $spline->setFlag($length - 1 - $i, $bin[$i]);
+            }
+          }
+        }
+        foreach($data['knots'] as $knot) {
+          $spline->addKnot($knot);
+        }
+        foreach($data['points'] as $point) {
+          $spline->addPoint([$point[10], $point[20], $point[30]]);
+        }
+        return $spline;
       case 'POLYLINE':
       case 'VERTEX':
         if (isset($data[100])) {
@@ -465,7 +543,7 @@ class DXFighter {
               break;
             default:
               echo 'The polyline type ' . $data[100] . ' has not been found' . PHP_EOL;
-              return;
+              return false;
           }
         } else {
           $polyline = new Polyline(2);
@@ -475,9 +553,10 @@ class DXFighter {
         }
         if (isset($data[70])) {
           $bin = decbin($data[70]);
-          for($i = strlen((string)$bin) - 1; $i >= 0; $i--) {
+          $length = strlen((string)$bin);
+          for($i = $length - 1; $i >= 0; $i--) {
             if (boolval($bin[$i])) {
-              $polyline->setFlag($i, $bin[$i]);
+              $polyline->setFlag($length - 1 - $i, $bin[$i]);
             }
           }
         }
@@ -486,8 +565,9 @@ class DXFighter {
         }
         $polyline->move($move);
         $polyline->rotate($rotate);
-        $this->addEntity($polyline);
+        return $polyline;
     }
+    return false;
   }
 
   private function readObjectsSection($values) {

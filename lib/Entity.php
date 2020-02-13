@@ -129,7 +129,7 @@ class Entity extends BasicObject {
   /**
    * Public function to render an entity, returns a string representation of
    * the entity.
-   * @return string
+   * @return array
    */
   function render() {
     $output = array();
