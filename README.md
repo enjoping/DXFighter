@@ -28,6 +28,7 @@ types just open an Issue. I'm happy to help.
  - Polyline
  - Text
  - Spline
+ - Insert
  
 ### At the moment the library supports reading for following entity types:
  - Ellipses
@@ -35,6 +36,7 @@ types just open an Issue. I'm happy to help.
  - Polyline
  - Text
  - Spline
+ - Insert
 
 ## License
 This project is published under BSD 3-Clause licence. More information can be found in [the LICENSE file](LICENSE).
