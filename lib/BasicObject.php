@@ -36,6 +36,10 @@ class BasicObject {
     return $this->idToHex($this->handle);
   }
 
+  public function getName() {
+    return $this->getHandle();
+  }
+
   /**
    * @param $id
    * @return string

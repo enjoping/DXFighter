@@ -33,6 +33,10 @@ class SystemVariable extends BasicObject {
     parent::__construct();
   }
 
+  public function getName() {
+    return $this->variable;
+  }
+
   /**
    * Public function to render an entity, returns a string representation of
    * the entity.

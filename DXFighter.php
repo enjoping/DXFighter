@@ -80,10 +80,9 @@ class DXFighter {
     foreach ($this->sections as $section) {
       $this->{$section} = new Section($section);
     }
-    if (!$readPath) {
-      $this->addBasicObjects();
-    } else {
-      $this->read($readPath, false);
+    $this->addBasicObjects();
+    if ($readPath) {
+      $this->read($readPath);
     }
   }
 
@@ -154,7 +153,7 @@ class DXFighter {
    * @param int $rotate a degree value to rotate all entities with
    */
   public function addEntitiesFromFile($path, $move = [0,0,0], $rotate = 0) {
-    $this->read($path, true, $move, $rotate);
+    $this->read($path, $move, $rotate);
   }
 
   public function getEntities() {
@@ -238,7 +237,7 @@ class DXFighter {
     fclose($fh);
   }
 
-  private function read($path, $entitiesOnly = false, $move = [0,0,0], $rotate = 0) {
+  private function read($path, $move = [0,0,0], $rotate = 0) {
     if (!file_exists($path) || !filesize($path)) {
       throw new Exception('The path to the file is either invalid or the file is empty');
     }
@@ -251,10 +250,10 @@ class DXFighter {
         'value' => trim($lines[$i])
       ];
     }
-    $this->readDocument($values, $entitiesOnly, $move, $rotate);
+    $this->readDocument($values, $move, $rotate);
   }
 
-  private function readDocument($values, $entitiesOnly, $move = [0,0,0], $rotate = 0) {
+  private function readDocument($values, $move = [0,0,0], $rotate = 0) {
     $section_pattern = [
       'name' => '',
       'values' => [],
@@ -266,28 +265,22 @@ class DXFighter {
           $section = $section_pattern;
           continue;
         } elseif ($value['value'] == 'ENDSEC') {
-          if ($entitiesOnly) {
-            if ($section['name'] == 'ENTITIES') {
+          switch ($section['name']) {
+            case 'HEADER':
+              $this->readHeaderSection($section['values']);
+              break;
+            case 'TABLES':
+              $this->readTablesSection($section['values']);
+              break;
+            case 'BLOCKS':
+              $this->readBlocksSection($section['values']);
+              break;
+            case 'ENTITIES':
               $this->readEntitiesSection($section['values'], true, $move, $rotate);
-            }
-          } else {
-            switch ($section['name']) {
-              case 'HEADER':
-                $this->readHeaderSection($section['values']);
-                break;
-              case 'TABLES':
-                $this->readTablesSection($section['values']);
-                break;
-              case 'BLOCKS':
-                $this->readBlocksSection($section['values']);
-                break;
-              case 'ENTITIES':
-                $this->readEntitiesSection($section['values'], true, $move, $rotate);
-                break;
-              case 'OBJECTS':
-                $this->readObjectsSection($section['values']);
-                break;
-            }
+              break;
+            case 'OBJECTS':
+              $this->readObjectsSection($section['values']);
+              break;
           }
           continue;
         }

@@ -19,14 +19,15 @@ namespace DXFighter\lib;
  */
 class Section {
   protected $name;
-  protected $items = array();
+  protected $items = [];
+  protected $itemNames = [];
 
   /**
    * Section constructor.
    * @param $name
    * @param array $items
    */
-  function __construct($name, $items = array()) {
+  function __construct($name, $items = []) {
     $this->name = $name;
     $this->items = $items;
   }
@@ -37,7 +38,20 @@ class Section {
    * @param BasicObject $item
    */
   public function addItem(BasicObject $item) {
-    $this->items[] = $item;
+    $name = strtoupper($item->getName());
+    if (!in_array($name, $this->itemNames)) {
+      $this->itemNames[] = $name;
+      $this->items[] = $item;
+    } elseif ($this->name == 'tables') {
+      foreach($this->items as $existing) {
+        if (strtoupper($existing->getName()) == $name) {
+          $entries = $item->getEntries();
+          foreach($entries as $entry) {
+            $existing->addEntry($entry);
+          }
+        }
+      }
+    }
   }
 
   /**

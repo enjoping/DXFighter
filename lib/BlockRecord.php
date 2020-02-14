@@ -26,6 +26,10 @@ class BlockRecord extends BasicObject {
     parent::__construct();
   }
 
+  public function getName() {
+    return $this->name;
+  }
+
   /**
    * Public function to render an entity, returns a string representation of
    * the entity.

@@ -35,6 +35,10 @@ class Dictionary extends Entity {
     parent::__construct();
   }
 
+  public function getName() {
+    return $this->entries[0]['name'];
+  }
+
   /**
    * Public function to render an entity, returns a string representation of
    * the entity.

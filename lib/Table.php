@@ -19,6 +19,7 @@ namespace DXFighter\lib;
 class Table extends BasicObject {
   protected $name;
   protected $entries;
+  protected $entryNames = [];
 
   /**
    * Table constructor.
@@ -30,12 +31,24 @@ class Table extends BasicObject {
     parent::__construct();
   }
 
+  public function getName() {
+    return $this->name;
+  }
+
   /**
    * Add an entity object to the DXF object
    * @param $entry
    */
   public function addEntry($entry) {
-    $this->entries[] = $entry;
+    $name = strtoupper($entry->getName());
+    if (!in_array($name, $this->entryNames)) {
+      $this->entryNames[] = $name;
+      $this->entries[] = $entry;
+    }
+  }
+
+  public function getEntries() {
+    return $this->entries;
   }
 
   /**

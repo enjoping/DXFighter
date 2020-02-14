@@ -34,6 +34,10 @@ class Block extends Entity {
     $this->endblk = new Endblk($this->layer, $this->pointer);
   }
 
+  public function getName() {
+    return $this->name;
+  }
+
   /**
    * Adds an Entity to the block
    *
