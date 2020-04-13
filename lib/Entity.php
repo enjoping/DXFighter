@@ -77,6 +77,7 @@ class Entity extends BasicObject {
    */
   public function setFlag($id, $value) {
     $this->flags[$id] = $value;
+    return $this;
   }
 
   /**
@@ -86,6 +87,7 @@ class Entity extends BasicObject {
    */
   public function setLayer($layer) {
     $this->layer = $layer;
+    return $this;
   }
 
   /**
@@ -95,6 +97,7 @@ class Entity extends BasicObject {
    */
   public function setColor($color) {
     $this->color = $color;
+    return $this;
   }
 
   /**
@@ -104,6 +107,7 @@ class Entity extends BasicObject {
    */
   public function setPaperSpace($ps) {
     $this->paperSpace = $ps;
+    return $this;
   }
 
   /**
@@ -115,6 +119,7 @@ class Entity extends BasicObject {
   public function setLineType($lineType, $scale = 1) {
     $this->lineType = $lineType;
     $this->lineTypeScale = $scale;
+    return $this;
   }
 
   /**
@@ -124,6 +129,7 @@ class Entity extends BasicObject {
    */
   public function hide($hidden) {
     $this->hidden = $hidden;
+    return $this;
   }
 
   /**

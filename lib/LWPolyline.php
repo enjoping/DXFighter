@@ -35,6 +35,7 @@ class LWPolyline extends Entity {
    */
   public function addPoint($point) {
     $this->points[] = $point;
+    return $this;
   }
 
   /**
