@@ -147,6 +147,16 @@ class DXFighter {
   }
 
   /**
+   * Handler to add a table item to the DXFighter instance
+   * @param $item
+   */
+  public function addTable($tableItem) {
+    $table = new Table( ( (new \ReflectionClass($tableItem))->getShortName() ) );
+    $table->addEntry($tableItem);
+    $this->tables->addItem($table);
+  }
+
+  /**
    * Public function to load a DXF file and add all entities to the DXF object
    * @param string $path a file path to the DXF file to read
    * @param array $move Vector to move all entities with
