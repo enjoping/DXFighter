@@ -230,11 +230,13 @@ class DXFighter {
    * Save the DXF to a specific place
    *
    * @param $fileName
+   * @return $absolutePath
    */
   public function saveAs($fileName) {
     $fh = fopen($fileName, 'w');
     fwrite($fh, iconv("UTF-8", "WINDOWS-1252", $this->toString(FALSE)));
     fclose($fh);
+    return realpath($fileName);
   }
 
   private function read($path, $move = [0,0,0], $rotate = 0) {
