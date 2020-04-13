@@ -37,7 +37,7 @@ class BasicObject {
   }
 
   public function getName() {
-    return $this->getHandle();
+    return isset($this->name) ? $this->name : $this->getHandle();
   }
 
   /**
