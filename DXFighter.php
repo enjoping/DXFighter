@@ -147,6 +147,16 @@ class DXFighter {
   }
 
   /**
+   * Handler to add a table item to the DXFighter instance
+   * @param $item
+   */
+  public function addTable($tableItem) {
+    $table = new Table( ( (new \ReflectionClass($tableItem))->getShortName() ) );
+    $table->addEntry($tableItem);
+    $this->tables->addItem($table);
+  }
+
+  /**
    * Public function to load a DXF file and add all entities to the DXF object
    * @param string $path a file path to the DXF file to read
    * @param array $move Vector to move all entities with
@@ -230,11 +240,13 @@ class DXFighter {
    * Save the DXF to a specific place
    *
    * @param $fileName
+   * @return $absolutePath
    */
   public function saveAs($fileName) {
     $fh = fopen($fileName, 'w');
     fwrite($fh, iconv("UTF-8", "WINDOWS-1252", $this->toString(FALSE)));
     fclose($fh);
+    return realpath($fileName);
   }
 
   private function read($path, $move = [0,0,0], $rotate = 0) {

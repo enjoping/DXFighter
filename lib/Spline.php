@@ -45,6 +45,7 @@ class Spline extends Entity {
    */
   public function addPoint($point) {
     $this->points[] = [$point[0], $point[1], $point[2]];
+    return $this;
   }
 
   /**
@@ -53,6 +54,7 @@ class Spline extends Entity {
    */
   public function addKnot($value) {
     $this->knots[] = $value;
+    return $this;
   }
 
   /**

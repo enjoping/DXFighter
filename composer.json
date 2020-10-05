@@ -12,5 +12,11 @@
     "require-dev": {
         "phpunit/phpunit": "^7",
         "phpcheckstyle/phpcheckstyle": "^0.14.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "DXFighter\\lib\\": "lib/",
+            "DXFighter\\": ""
+        }
     }
 }

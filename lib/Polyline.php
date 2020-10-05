@@ -38,6 +38,7 @@ class Polyline extends Entity {
    */
   public function addPoint($point, $bulge = 0) {
     $this->points[] = new Vertex($point, $this->dimension, $this->handle, $this->layer, $bulge);
+    return $this;
   }
 
   /**
