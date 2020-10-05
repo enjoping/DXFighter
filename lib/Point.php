@@ -58,4 +58,20 @@ class Point extends Entity {
     array_push($output, 50, $this->angle);
     return implode(PHP_EOL, $output);
   }
+
+  public function getThickness() {
+    return $this->thickness;
+  }
+
+  public function getPoint() {
+    return $this->point;
+  }
+
+  public function getExtrusion() {
+    return $this->extrusion;
+  }
+
+  public function getAngle() {
+    return $this->angle;
+  }
 }

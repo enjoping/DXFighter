@@ -84,4 +84,28 @@ class Spline extends Entity {
 
     return implode(PHP_EOL, $output);
   }
+
+  public function getBase() {
+    return $this->base;
+  }
+
+  public function getStart() {
+    return $this->start;
+  }
+
+  public function getEnd() {
+    return $this->end;
+  }
+
+  public function getPoints() {
+    return $this->points;
+  }
+
+  public function getKnots() {
+    return $this->knots;
+  }
+
+  public function getDegree() {
+    return $this->degree;
+  }
 }

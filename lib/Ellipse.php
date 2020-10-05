@@ -76,4 +76,28 @@ class Ellipse extends Entity {
     array_push($output, 42, $this->end);
     return implode(PHP_EOL, $output);
   }
+
+  public function getCenter() {
+    return $this->center;
+  }
+
+  public function getEndpoint() {
+    return $this->endpoint;
+  }
+
+  public function getExtrusion() {
+    return $this->extrusion;
+  }
+
+  public function getRatio() {
+    return $this->ratio;
+  }
+
+  public function getStart() {
+    return $this->start;
+  }
+
+  public function getEnd() {
+    return $this->end;
+  }
 }

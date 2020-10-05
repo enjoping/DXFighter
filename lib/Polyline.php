@@ -89,4 +89,16 @@ class Polyline extends Entity {
     array_push($output, $this->seqend->render());
     return implode(PHP_EOL, $output);
   }
+
+  public function getBase() {
+    return $this->base;
+  }
+
+  public function getPoints() {
+    return $this->points;
+  }
+
+  public function getDimension() {
+    return $this->dimension;
+  }
 }

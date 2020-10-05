@@ -69,4 +69,20 @@ class Line extends Entity {
     array_push($output, $this->point($this->extrusion, 200));
     return implode(PHP_EOL, $output);
   }
+
+  public function getThickness() {
+    return $this->thickness;
+  }
+
+  public function getStart() {
+    return $this->start;
+  }
+
+  public function getEnd() {
+    return $this->end;
+  }
+
+  public function getExtrusion() {
+    return $this->extrusion;
+  }
 }
