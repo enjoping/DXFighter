@@ -58,4 +58,20 @@ class Circle extends Entity {
     array_push($output, $this->point($this->extrusion, 200));
     return implode(PHP_EOL, $output);
   }
+
+  public function getThickness() {
+    return $this->thickness;
+  }
+
+  public function getPoint() {
+    return $this->point;
+  }
+
+  public function getRadius() {
+    return $this->radius;
+  }
+
+  public function getExtrusion() {
+    return $this->extrusion;
+  }
 }

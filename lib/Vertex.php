@@ -68,4 +68,16 @@ class Vertex extends Entity {
     array_push($output, 70, $this->flagsToString());
     return implode(PHP_EOL, $output);
   }
+
+  public function getDimension() {
+    return $this->dimension;
+  }
+
+  public function getPoint() {
+    return $this->point;
+  }
+
+  public function getBulge() {
+    return $this->bulge;
+  }
 }

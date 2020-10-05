@@ -47,4 +47,12 @@ class Arc extends Circle {
     array_push($output, 51, $this->end);
     return implode(PHP_EOL, $output);
   }
+
+  public function getStart() {
+    return $this->start;
+  }
+
+  public function getEnd() {
+    return $this->end;
+  }
 }
