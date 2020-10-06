@@ -23,7 +23,7 @@ class Arc extends Circle {
    * @param $point
    * @param $radius
    * @param int $start
-   * @param array $end
+   * @param int $end
    * @param int $thickness
    * @param array $extrusion
    */
