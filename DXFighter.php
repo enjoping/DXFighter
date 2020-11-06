@@ -21,6 +21,7 @@ use DXFighter\lib\AppID,
   DXFighter\lib\SystemVariable,
   DXFighter\lib\Table;
 use DXFighter\lib\Arc;
+use DXFighter\lib\Circle;
 use DXFighter\lib\Ellipse;
 use DXFighter\lib\Insert;
 use DXFighter\lib\Line;
@@ -409,7 +410,7 @@ class DXFighter {
     $entities = [];
     $entityType = '';
     $data = [];
-    $types = ['TEXT', 'LINE', 'ELLIPSE', 'SPLINE', 'INSERT', 'ARC'];
+    $types = ['TEXT', 'LINE', 'ELLIPSE', 'SPLINE', 'INSERT', 'ARC', 'CIRCLE'];
     // TODO most entity types are still missing
     foreach ($values as $value) {
       if ($value['key'] == 0) {
@@ -582,6 +583,19 @@ class DXFighter {
         $polyline->move($move);
         $polyline->rotate($rotate);
         return $polyline;
+      case 'CIRCLE':
+        $center = [$data[10], $data[20], $data[30]];
+        $thickness = $data[39] ? $data[39] : 0;
+        $extrusion = [
+          $data[210] ? $data[210] : 0,
+          $data[220] ? $data[220] : 0,
+          $data[230] ? $data[230] : 1
+        ];
+        $circle = new Circle($center, $data[40], $thickness, $extrusion);
+
+        $circle->move($move);
+
+        return $circle;
       case 'ARC':
         $center = [$data[10], $data[20], $data[30]];
         $thickness = $data[39] ? $data[39] : 0;
