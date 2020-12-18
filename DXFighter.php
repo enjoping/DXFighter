@@ -578,7 +578,8 @@ class DXFighter {
           }
         }
         foreach($data['points'] as $point) {
-          $polyline->addPoint([$point[10], $point[20], $point[30]]);
+          $bulge = isset($point[42]) ? $point[42] : 0;
+          $polyline->addPoint([$point[10], $point[20], $point[30]], $bulge);
         }
         $polyline->move($move);
         $polyline->rotate($rotate);
