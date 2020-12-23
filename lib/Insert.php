@@ -15,18 +15,25 @@ namespace DXFighter\lib;
  * @package DXFighter\lib
  */
 class Insert extends Entity {
-  protected $name;
+  protected $blockName;
   protected $point;
+  protected $scale;
+  protected $rotation;
 
   /**
    * Insert constructor.
-   * @param $name
-   * @param $point
+   *
+   * @param $blockName
+   * @param float[] $point
+   * @param float[] $scale The X, Y and Z scale factors.
+   * @param float $rotation
    */
-  function __construct($name, $point = [0, 0, 0]) {
+  function __construct( $blockName, $point = [0, 0, 0], $scale = [1, 1, 1], $rotation = 0) {
     $this->entityType = 'insert';
-    $this->name = $name;
-    $this->point = $point;
+    $this->blockName       = $blockName;
+    $this->point      = $point;
+    $this->scale      = $scale;
+    $this->rotation   = $rotation;
     parent::__construct();
   }
 
@@ -46,8 +53,12 @@ class Insert extends Entity {
   public function render() {
     $output = parent::render();
     array_push($output, 100, 'AcDbBlockReference');
-    array_push($output, 2, strtoupper($this->name));
+    array_push($output, 2, strtoupper($this->blockName));
     array_push($output, $this->point($this->point));
+    array_push($output, 41, $this->scale[0]);
+    array_push($output, 42, $this->scale[1]);
+    array_push($output, 43, $this->scale[2]);
+    array_push($output, 50, $this->rotation);
     return implode(PHP_EOL, $output);
   }
 }
