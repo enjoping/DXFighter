@@ -37,6 +37,10 @@ class SystemVariable extends BasicObject {
     return $this->variable;
   }
 
+  public function getValues() {
+    return $this->values;
+  }
+
   /**
    * Public function to render an entity, returns a string representation of
    * the entity.
