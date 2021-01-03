@@ -545,7 +545,14 @@ class DXFighter {
         }
         return $spline;
       case 'INSERT':
-        $insert = new Insert($data[2]);
+        $point = [$data[10], $data[20], $data[30]];
+        $scale = [
+          isset( $data[41] ) ? $data[41] : 1,
+          isset( $data[42] ) ? $data[42] : 1,
+          isset( $data[43] ) ? $data[43] : 1,
+        ];
+        $rotation = isset( $data[50] ) ? $data[50] : 0;
+        $insert = new Insert($data[2], $point, $scale, $rotation);
         $insert->move($move);
         return $insert;
       case 'POLYLINE':
