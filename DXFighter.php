@@ -55,11 +55,35 @@ spl_autoload_register(function($class) {
  */
 class DXFighter {
   protected $sections;
+
+  /**
+   * @var Section
+   */
   protected $header;
+
+  /**
+   * @var Section
+   */
   protected $classes;
+
+  /**
+   * @var Section
+   */
   protected $tables;
+
+  /**
+   * @var Section
+   */
   protected $blocks;
+
+  /**
+   * @var Section
+   */
   protected $entities;
+
+  /**
+   * @var Section
+   */
   protected $objects;
   protected $thumbnailImage;
 
@@ -166,6 +190,26 @@ class DXFighter {
    */
   public function addEntitiesFromFile($path, $move = [0,0,0], $rotate = 0) {
     $this->read($path, $move, $rotate);
+  }
+
+  public function getHeader() {
+    return $this->header;
+  }
+
+  public function getClasses() {
+    return $this->classes;
+  }
+
+  public function getTables() {
+    return $this->tables;
+  }
+
+  public function getBlocks() {
+    return $this->blocks;
+  }
+
+  public function getObject() {
+    return $this->objects;
   }
 
   public function getEntities() {

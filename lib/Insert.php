@@ -61,4 +61,20 @@ class Insert extends Entity {
     array_push($output, 50, $this->rotation);
     return implode(PHP_EOL, $output);
   }
+
+  public function getBlockName() {
+    return $this->blockName;
+  }
+
+  public function getPoint() {
+    return $this->point;
+  }
+
+  public function getScale() {
+    return $this->scale;
+  }
+
+  public function getRotation() {
+    return $this->rotation;
+  }
 }

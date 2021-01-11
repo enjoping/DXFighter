@@ -38,6 +38,10 @@ class Block extends Entity {
     return $this->name;
   }
 
+  public function getEntities() {
+    return $this->entities;
+  }
+
   /**
    * Adds an Entity to the block
    *
