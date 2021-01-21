@@ -81,6 +81,13 @@ class Entity extends BasicObject {
   }
 
   /**
+   * Retrieves a flag value for an entity.
+   */
+  public function getFlag($id) {
+    return $this->flags[$id];
+  }
+
+  /**
    * Public function to set the layer of an entity
    *
    * @param $layer string
