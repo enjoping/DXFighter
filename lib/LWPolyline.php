@@ -16,6 +16,7 @@ namespace DXFighter\lib;
  */
 class LWPolyline extends Entity {
   protected $points = array();
+  protected $bulges = array();
   protected $dimension;
 
   /**
@@ -33,13 +34,39 @@ class LWPolyline extends Entity {
    * Add a point to the LWPolyline
    * @param array $point
    */
-  public function addPoint($point) {
+  public function addPoint($point, $bulge = 0) {
     $this->points[] = $point;
+    $this->bulges[] = $bulge;
     return $this;
   }
 
   public function getPoints() {
     return $this->points;
+  }
+
+  public function getBulges() {
+    return $this->bulges;
+  }
+
+  /**
+   * Public function to move a Polyline entity
+   * @param array $move vector to move the entity with
+   */
+  public function move($move) {
+    foreach ($this->points as &$point) {
+      $this->movePoint($point, $move);
+    }
+  }
+
+  /**
+   * Public function to rotate all points of a polyline
+   * @param int $rotate degree value used for the rotation
+   * @param array $rotationCenter center point of the rotation
+   */
+  public function rotate($rotate, $rotationCenter = array(0, 0, 0)) {
+    foreach ($this->points as &$point) {
+      $this->rotatePoint($point, $rotationCenter, deg2rad($rotate));
+    }
   }
 
   /**
@@ -53,8 +80,9 @@ class LWPolyline extends Entity {
     array_push($output, 90, count($this->points));
     array_push($output, 70, $this->flagsToString());
 
-    foreach ($this->points as $point) {
+    foreach ($this->points as $i => $point) {
       array_push($output, $this->point($point));
+      array_push($output, 42, $this->bulges[$i]);
     }
 
     return implode(PHP_EOL, $output);

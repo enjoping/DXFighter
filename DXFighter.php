@@ -25,6 +25,7 @@ use DXFighter\lib\Circle;
 use DXFighter\lib\Ellipse;
 use DXFighter\lib\Insert;
 use DXFighter\lib\Line;
+use DXFighter\lib\LWPolyline;
 use DXFighter\lib\Polyline;
 use DXFighter\lib\Spline;
 use DXFighter\lib\Text;
@@ -454,11 +455,15 @@ class DXFighter {
     $entities = [];
     $entityType = '';
     $data = [];
-    $types = ['TEXT', 'LINE', 'ELLIPSE', 'SPLINE', 'INSERT', 'ARC', 'CIRCLE'];
+    $types = ['TEXT', 'LINE', 'ELLIPSE', 'SPLINE', 'INSERT', 'ARC', 'CIRCLE', 'LWPOLYLINE'];
     // TODO most entity types are still missing
     foreach ($values as $value) {
       if ($value['key'] == 0) {
-        if ((in_array($entityType, $types) && !empty($data)) || in_array($entityType, ['POLYLINE', 'VERTEX']) && $value['value'] == 'SEQEND') {
+        // This condition happens at the end of an entity
+        if (
+          (in_array($entityType, $types) && !empty($data)) ||
+          in_array($entityType, ['POLYLINE', 'VERTEX']) && $value['value'] == 'SEQEND'
+        ) {
           $entity = $this->addReadEntity($entityType, $data, $move, $rotate);
           if ($entity) {
             $entities[] = $entity;
@@ -473,6 +478,9 @@ class DXFighter {
           $data['knots'] = [];
           $data['points'] = [];
         }
+        if ($value['value'] == 'LWPOLYLINE') {
+          $data['points'] = [];
+        }
       } else {
         if ($entityType == 'SPLINE' && in_array($value['key'], [10, 20, 30, 40])) {
           switch ($value['key']) {
@@ -485,6 +493,16 @@ class DXFighter {
               break;
             case 40:
               $data['knots'][] = $value['value'];
+              break;
+          }
+        } elseif ($entityType == 'LWPOLYLINE' && in_array($value['key'], [10, 20, 42])) {
+          switch ($value['key']) {
+            case 10:
+              $data['points'][] = [10 => $value['value'], 20 => 0, 42 => 0];
+              break;
+            case 20:
+            case 42:
+              $data['points'][sizeof($data['points']) -1 ][$value['key']] = $value['value'];
               break;
           }
         } elseif (in_array($entityType, $types) || $entityType == 'POLYLINE') {
@@ -599,10 +617,14 @@ class DXFighter {
         $insert = new Insert($data[2], $point, $scale, $rotation);
         $insert->move($move);
         return $insert;
+      case 'LWPOLYLINE':
       case 'POLYLINE':
       case 'VERTEX':
         if (isset($data[100])) {
           switch ($data[100]) {
+            case 'AcDbPolyline':
+              $polyline = new LWPolyline();
+              break;
             case 'AcDb2dPolyline':
               $polyline = new Polyline(2);
               break;
