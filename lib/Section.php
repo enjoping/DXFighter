@@ -39,7 +39,7 @@ class Section {
    */
   public function addItem(BasicObject $item) {
     $name = strtoupper($item->getName());
-    if (!in_array($name, $this->itemNames)) {
+    if (!in_array($name, $this->itemNames, true)) {
       $this->itemNames[] = $name;
       $this->items[] = $item;
     } elseif ($this->name == 'tables') {
