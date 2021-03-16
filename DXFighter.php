@@ -29,7 +29,6 @@ use DXFighter\lib\LWPolyline;
 use DXFighter\lib\Polyline;
 use DXFighter\lib\Spline;
 use DXFighter\lib\Text;
-use PHPUnit\Framework\Exception;
 
 /**
  * Returns the class name, used for auto loading libraries
@@ -298,7 +297,7 @@ class DXFighter {
 
   private function read($path, $move = [0,0,0], $rotate = 0) {
     if (!file_exists($path) || !filesize($path)) {
-      throw new Exception('The path to the file is either invalid or the file is empty');
+      throw new \Exception('The path to the file is either invalid or the file is empty');
     }
     $content = file_get_contents($path);
     $lines = preg_split ('/$\R?^/m', $content);
