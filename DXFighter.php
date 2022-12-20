@@ -530,11 +530,11 @@ class DXFighter {
         $rotation = $data[50] ?? 0;
         $thickness = $data[39] ?? 0;
         $text = new Text($data[1] ?? 0, $point, $data[40] ?? 0, $rotation, $thickness);
-        if ($data[72] ?? 0) {
-          $text->setHorizontalJustification($data[72] ?? 0);
+        if (isset($data[72])) {
+          $text->setHorizontalJustification($data[72]);
         }
-        if ($data[73] ?? 0) {
-          $text->setVerticalJustification($data[73] ?? 0);
+        if (isset($data[73])) {
+          $text->setVerticalJustification($data[73]);
         }
         $text->move($move);
         $text->rotate($rotate);
