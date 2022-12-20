@@ -526,27 +526,27 @@ class DXFighter {
   private function addReadEntity($type, $data, $move = [0,0,0], $rotate = 0) {
     switch ($type) {
       case 'TEXT':
-        $point = [$data[10], $data[20], $data[30]];
-        $rotation = $data[50] ? $data[50] : 0;
-        $thickness = $data[39] ? $data[39] : 0;
-        $text = new Text($data[1], $point, $data[40], $rotation, $thickness);
-        if ($data[72]) {
-          $text->setHorizontalJustification($data[72]);
+        $point = [$data[10] ?? 0, $data[20] ?? 0, $data[30] ?? 0];
+        $rotation = $data[50] ?? 0;
+        $thickness = $data[39] ?? 0;
+        $text = new Text($data[1] ?? 0, $point, $data[40] ?? 0, $rotation, $thickness);
+        if ($data[72] ?? 0) {
+          $text->setHorizontalJustification($data[72] ?? 0);
         }
-        if ($data[73]) {
-          $text->setVerticalJustification($data[73]);
+        if ($data[73] ?? 0) {
+          $text->setVerticalJustification($data[73] ?? 0);
         }
         $text->move($move);
         $text->rotate($rotate);
         return $text;
       case 'LINE':
-        $start = [$data[10], $data[20], $data[30]];
-        $end = [$data[11], $data[21], $data[31]];
-        $thickness = $data[39] ? $data[39] : 0;
+        $start = [$data[10] ?? 0, $data[20] ?? 0, $data[30] ?? 0];
+        $end = [$data[11] ?? 0, $data[21] ?? 0, $data[31] ?? 0];
+        $thickness = $data[39] ?? 0;
         $extrusion = [
-          $data[210] ? $data[210] : 0,
-          $data[220] ? $data[220] : 0,
-          $data[230] ? $data[230] : 1
+          $data[210] ?? 0,
+          $data[220] ?? 0,
+          $data[230] ?? 1
         ];
         $line = new Line($start, $end, $thickness, $extrusion);
         if (isset($data[62])) {
@@ -556,16 +556,16 @@ class DXFighter {
         $line->rotate($rotate);
         return $line;
       case 'ELLIPSE':
-        $center = [$data[10], $data[20], $data[30]];
-        $endpoint = [$data[11], $data[21], $data[31]];
-        $start = $data[41] ? $data[41] : 0;
-        $end = $data[42] ? $data[42] : M_PI * 2;
+        $center = [$data[10] ?? 0, $data[20] ?? 0, $data[30] ?? 0];
+        $endpoint = [$data[11] ?? 0, $data[21] ?? 0, $data[31] ?? 0];
+        $start = $data[41] ?? 0;
+        $end = $data[42] ?? M_PI * 2;
         $extrusion = [
-          $data[210] ? $data[210] : 0,
-          $data[220] ? $data[220] : 0,
-          $data[230] ? $data[230] : 1
+          $data[210] ?? 0,
+          $data[220] ?? 0,
+          $data[230] ?? 1
         ];
-        $ellipse = new Ellipse($center, $endpoint, $data[40], $start, $end, $extrusion);
+        $ellipse = new Ellipse($center, $endpoint, $data[40] ?? 0, $start, $end, $extrusion);
         if (isset($data[62])) {
           $ellipse->setColor($data[62]);
         }
@@ -575,17 +575,17 @@ class DXFighter {
       case 'SPLINE':
         $base = [0, 0, 0];
         if (isset($data[210])) {
-          $base = [$data[210], $data[220], $data[230]];
+          $base = [$data[210], $data[220] ?? 0, $data[230] ?? 0];
         }
         $start = [0, 0, 0];
         if (isset($data[12])) {
-          $start = [$data[12], $data[22], $data[32]];
+          $start = [$data[12], $data[22] ?? 0, $data[32] ?? 0];
         }
         $end = [0, 0, 0];
         if (isset($data[13])) {
-          $end = [$data[13], $data[23], $data[33]];
+          $end = [$data[13], $data[23] ?? 0, $data[33] ?? 0];
         }
-        $spline = new Spline(isset($data[71]) ? $data[71] : 1, $base, $start, $end);
+        $spline = new Spline($data[71] ?? 1, $base, $start, $end);
         if (isset($data[62])) {
           $spline->setColor($data[62]);
         }
@@ -602,18 +602,18 @@ class DXFighter {
           $spline->addKnot($knot);
         }
         foreach($data['points'] as $point) {
-          $spline->addPoint([$point[10], $point[20], $point[30]]);
+          $spline->addPoint([$point[10] ?? 0, $point[20] ?? 0, $point[30] ?? 0]);
         }
         return $spline;
       case 'INSERT':
-        $point = [$data[10], $data[20], $data[30]];
+        $point = [$data[10] ?? 0, $data[20] ?? 0, $data[30] ?? 0];
         $scale = [
-          isset( $data[41] ) ? $data[41] : 1,
-          isset( $data[42] ) ? $data[42] : 1,
-          isset( $data[43] ) ? $data[43] : 1,
+          $data[41] ?? 1,
+          $data[42] ?? 1,
+          $data[43] ?? 1,
         ];
-        $rotation = isset( $data[50] ) ? $data[50] : 0;
-        $insert = new Insert($data[2], $point, $scale, $rotation);
+        $rotation = $data[50] ?? 0;
+        $insert = new Insert($data[2] ?? 0, $point, $scale, $rotation);
         $insert->move($move);
         return $insert;
       case 'LWPOLYLINE':
@@ -650,38 +650,38 @@ class DXFighter {
           }
         }
         foreach($data['points'] as $point) {
-          $bulge = isset($point[42]) ? $point[42] : 0;
-          $polyline->addPoint([$point[10], $point[20], $point[30]], $bulge);
+          $bulge = $point[42] ?? 0;
+          $polyline->addPoint([$point[10] ?? 0, $point[20] ?? 0, $point[30] ?? 0], $bulge);
         }
         $polyline->move($move);
         $polyline->rotate($rotate);
         return $polyline;
       case 'CIRCLE':
-        $center = [$data[10], $data[20], $data[30]];
-        $thickness = $data[39] ? $data[39] : 0;
+        $center = [$data[10] ?? 0, $data[20] ?? 0, $data[30] ?? 0];
+        $thickness = $data[39] ?? 0;
         $extrusion = [
-          $data[210] ? $data[210] : 0,
-          $data[220] ? $data[220] : 0,
-          $data[230] ? $data[230] : 1
+          $data[210] ?? 0,
+          $data[220] ?? 0,
+          $data[230] ?? 1
         ];
-        $circle = new Circle($center, $data[40], $thickness, $extrusion);
+        $circle = new Circle($center, $data[40] ?? 0, $thickness, $extrusion);
 
         $circle->move($move);
 
         return $circle;
       case 'ARC':
-        $center = [$data[10], $data[20], $data[30]];
-        $thickness = $data[39] ? $data[39] : 0;
+        $center = [$data[10] ?? 0, $data[20] ?? 0, $data[30] ?? 0];
+        $thickness = $data[39] ?? 0;
         $extrusion = [
-          $data[210] ? $data[210] : 0,
-          $data[220] ? $data[220] : 0,
-          $data[230] ? $data[230] : 1
+          $data[210] ?? 0,
+          $data[220] ?? 0,
+          $data[230] ?? 1
         ];
         $arc = new Arc(
           $center,
-          $data[40],
-          $data[50],
-          $data[51],
+          $data[40] ?? 0,
+          $data[50] ?? 0,
+          $data[51] ?? 0,
           $thickness,
           $extrusion
         );
